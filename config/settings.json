@@ -1,38 +1,17 @@
 {
     "projects": {
-        "Application": {
-            "additionalDependencies": [],
-            "additionalIncludeDirectories": [],
-            "additionalLibraryDirectories": [],
-            "dependencies": [
-                "Engine"
-            ],
+        "Engine": {
+            "dependencies": [],
             "dependents": [],
-            "guid": "084F5C17-11A2-70CC-5C9E-23267FC52EB5",
+            "guid": "69F96D24-2ADF-746A-4641-61494ABA5A3C",
             "lib": false,
             "pch": true,
-            "preprocessorDefinitions": [],
-            "vcpkg": false,
-            "window": true
-        },
-        "Engine": {
-            "additionalDependencies": [],
-            "additionalIncludeDirectories": [],
-            "additionalLibraryDirectories": [],
-            "dependencies": [],
-            "dependents": [
-                "Application"
-            ],
-            "guid": "34A02D77-119A-6F6B-14BF-102024D23766",
-            "lib": true,
-            "pch": true,
-            "preprocessorDefinitions": [],
             "vcpkg": false,
             "window": false
         }
     },
-    "solution_guid": "2F27517D-2128-6A91-0FC6-5BC9450960DF",
-    "solution_name": "DirectXEngine",
-    "startup_project": "Application",
+    "solution_guid": "478F1E2B-57EE-5451-7ACE-2A5A10DF2341",
+    "solution_name": "ECS",
+    "startup_project": "Engine",
     "version": "1.17.3"
 }

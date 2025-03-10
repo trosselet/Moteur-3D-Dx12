@@ -1,1 +1,1 @@
-SolutionGenerator.exe -make ..\ -clear
+SolutionGen.exe -make ..\ -clear
