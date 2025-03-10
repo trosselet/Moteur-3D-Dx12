@@ -1,0 +1,38 @@
+{
+    "projects": {
+        "Application": {
+            "additionalDependencies": [],
+            "additionalIncludeDirectories": [],
+            "additionalLibraryDirectories": [],
+            "dependencies": [
+                "Engine"
+            ],
+            "dependents": [],
+            "guid": "084F5C17-11A2-70CC-5C9E-23267FC52EB5",
+            "lib": false,
+            "pch": true,
+            "preprocessorDefinitions": [],
+            "vcpkg": false,
+            "window": true
+        },
+        "Engine": {
+            "additionalDependencies": [],
+            "additionalIncludeDirectories": [],
+            "additionalLibraryDirectories": [],
+            "dependencies": [],
+            "dependents": [
+                "Application"
+            ],
+            "guid": "34A02D77-119A-6F6B-14BF-102024D23766",
+            "lib": true,
+            "pch": true,
+            "preprocessorDefinitions": [],
+            "vcpkg": false,
+            "window": false
+        }
+    },
+    "solution_guid": "2F27517D-2128-6A91-0FC6-5BC9450960DF",
+    "solution_name": "DirectXEngine",
+    "startup_project": "Application",
+    "version": "1.17.3"
+}
