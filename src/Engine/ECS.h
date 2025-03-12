@@ -1,8 +1,11 @@
 #ifndef ECS_H__
 #define ECS_H__
 
+#include "vector"
+#include "unordered_map"
+
 class Component;
-class Entity;
+using Entity = int;
 
 class ECS
 {
@@ -11,26 +14,42 @@ public:
 	virtual ~ECS() = default;
 
 	template <typename T>
-	T GetComponent(Entity entity);
+	T* GetComponent(Entity entity);
 
-	void AddComponent(Entity entity, Component component);
+	template <typename T>
+	void AddComponent(Entity entity, T* pComponent);
+
 	Entity CreateEntity();
 
+	std::unordered_map<Entity, std::vector<Component*>>& GetEntities();
+
+private:
+	std::unordered_map<Entity, std::vector<Component*>> entityComponents;
+	Entity nextEntity = 0;
 };
 
 
 #endif // !ECS_H__
 
 template<typename T>
-inline T ECS::GetComponent(Entity entity)
+inline T* ECS::GetComponent(Entity entity)
 {
-	for (Component comp : entity.GetComponentList())
+	auto it = entityComponents.find(entity);
+	if (it != entityComponents.end())
 	{
-		if (comp == T)
+		for (Component* component : it->second)
 		{
-			return comp;
+			if (T* comp = dynamic_cast<T*>(component))
+			{
+				return comp;
+			}
 		}
 	}
+	return nullptr;
+}
 
-	return T();
+template<typename T>
+inline void ECS::AddComponent(Entity entity, T* pComponent)
+{
+	entityComponents[entity].emplace_back(pComponent);
 }

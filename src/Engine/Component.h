@@ -10,3 +10,10 @@ public:
 };
 
 #endif // !COMPONENT_H__
+
+
+struct TransformComponent : public Component
+{
+	float x;
+	float y;
+};
