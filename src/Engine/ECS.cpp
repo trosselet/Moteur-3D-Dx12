@@ -6,7 +6,12 @@ Entity ECS::CreateEntity()
 	return nextEntity++;
 }
 
-std::unordered_map<Entity, std::vector<Component*>>& ECS::GetEntities()
+void ECS::AddComponent(Entity entity, Component pComponent)
+{
+	entityComponents[entity].emplace_back(pComponent);
+}
+
+std::unordered_map<Entity, std::vector<Component>>& ECS::GetEntities()
 {
 	return entityComponents;
 }

@@ -1,15 +1,11 @@
-#ifndef COMPONENT_H__
-#define COMPONENT_H__
+#ifndef COMPONENT_H_INCLUDED
+#define COMPONENT_H_INCLUDED
 
 
-class Component
+struct Component
 {
-public:
-	Component() = default;
-	virtual ~Component() = default;
 };
 
-#endif // !COMPONENT_H__
 
 
 struct TransformComponent : public Component
@@ -17,3 +13,6 @@ struct TransformComponent : public Component
 	float x;
 	float y;
 };
+
+
+#endif // !COMPONENT_H_INCLUDED

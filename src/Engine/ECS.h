@@ -16,15 +16,14 @@ public:
 	template <typename T>
 	T* GetComponent(Entity entity);
 
-	template <typename T>
-	void AddComponent(Entity entity, T* pComponent);
+	void AddComponent(Entity entity, Component pComponent);
 
 	Entity CreateEntity();
 
-	std::unordered_map<Entity, std::vector<Component*>>& GetEntities();
+	std::unordered_map<Entity, std::vector<Component>>& GetEntities();
 
 private:
-	std::unordered_map<Entity, std::vector<Component*>> entityComponents;
+	std::unordered_map<Entity, std::vector<Component>> entityComponents;
 	Entity nextEntity = 0;
 };
 
@@ -37,7 +36,7 @@ inline T* ECS::GetComponent(Entity entity)
 	auto it = entityComponents.find(entity);
 	if (it != entityComponents.end())
 	{
-		for (Component* component : it->second)
+		for (Component component : it->second)
 		{
 			if (T* comp = dynamic_cast<T*>(component))
 			{
@@ -46,10 +45,4 @@ inline T* ECS::GetComponent(Entity entity)
 		}
 	}
 	return nullptr;
-}
-
-template<typename T>
-inline void ECS::AddComponent(Entity entity, T* pComponent)
-{
-	entityComponents[entity].emplace_back(pComponent);
 }
