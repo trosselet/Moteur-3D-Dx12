@@ -4,7 +4,7 @@
 
 
 #include "Component.h"
-#include "Entity.h"
+#include "ECS.h"
 
 #include <iostream>
 #include <vector>
