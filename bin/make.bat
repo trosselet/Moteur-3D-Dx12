@@ -1,1 +1,0 @@
-SolutionGen.exe -make ..\
