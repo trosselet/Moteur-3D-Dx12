@@ -1,11 +1,24 @@
 #include "pch.h"
 
-#include "Engine.h"
-#include "Render.h"
+using namespace Engine;
 
 int main()
 {
-    std::cout << "Hello World!\n";
-    Engine::fnEngine();
-    Render::fnRender();
+    Engine::TWindow window(Vector2i(800, 600), "Test");
+
+    Engine::Event event;
+
+    while (window.IsOpen())
+    {
+        while (window.PollEvent(event))
+        {
+            if (event.type == Engine::Event::Type::Closed)
+            {
+                window.Close();
+            }
+        }
+
+    }
+
+    return 0;
 }

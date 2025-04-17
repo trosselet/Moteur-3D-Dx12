@@ -2,7 +2,10 @@
 #include "framework.h"
 #include "Render.h"
 
-void Render::fnRender()
+namespace Render
 {
-	std::cout << "Hello Render\n";
+	void RenderCore::fnRender()
+	{
+		std::cout << "Hello Render\n";
+	}
 }

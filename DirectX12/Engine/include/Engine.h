@@ -1,8 +1,9 @@
 #pragma once
 
 
-class Engine
-{
-public:
-	static void fnEngine();
-};
+namespace Engine {
+    class EngineCore {
+    public:
+        void fnEngine();
+    };
+}

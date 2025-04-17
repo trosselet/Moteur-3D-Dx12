@@ -1,6 +1,11 @@
 #pragma once
-class Render
+
+
+namespace Render
 {
-public:
-	static void fnRender();
-};
+	class RenderCore
+	{
+	public:
+		void fnRender();
+	};
+}

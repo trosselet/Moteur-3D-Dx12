@@ -2,7 +2,10 @@
 #include "framework.h"
 #include "Engine.h"
 
-void Engine::fnEngine()
+namespace Engine
 {
-	std::cout << "Hello Engine\n";
+	void EngineCore::fnEngine()
+	{
+		std::cout << "Hello Engine\n";
+	}
 }

@@ -5,4 +5,6 @@
 #include <iostream>
 #include <Windows.h>
 
+#include "TWindow.h"
+
 #endif !PCH_H
