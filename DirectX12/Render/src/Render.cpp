@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "framework.h"
+#include "Render.h"
 
-void fnRender()
+void Render::fnRender()
 {
+	std::cout << "Hello Render\n";
 }

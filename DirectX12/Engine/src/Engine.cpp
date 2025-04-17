@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "framework.h"
+#include "Engine.h"
 
-void fnEngine()
+void Engine::fnEngine()
 {
+	std::cout << "Hello Engine\n";
 }
