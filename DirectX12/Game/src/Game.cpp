@@ -4,7 +4,7 @@ using namespace Engine;
 
 int main()
 {
-    Engine::TWindow window(Vector2i(800, 600), "Test");
+    Engine::TWindow window(Vector2i(1920, 1080), "Window");
 
     Engine::Event event;
 

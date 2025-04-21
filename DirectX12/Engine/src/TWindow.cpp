@@ -28,6 +28,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pointer));
         break;
     }
+    case WM_CLOSE:
+    {
+        PostMessage(hwnd, WM_APP + 1, 0, 0);
+        return 0;
+    }
     case WM_DESTROY:
     {
         Engine::TWindow* pointer = reinterpret_cast<Engine::TWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -83,14 +88,11 @@ bool Engine::TWindow::PollEvent(Event& event)
     MSG message;
     if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
     {
-        TranslateMessage(&message);
-        DispatchMessage(&message);
+        
 
         switch (message.message)
         {
-        case WM_QUIT:
-        case WM_CLOSE:
-        case WM_DESTROY:
+        case WM_APP + 1:
         {
             event.type = Event::Type::Closed;
             return true;
@@ -98,21 +100,22 @@ bool Engine::TWindow::PollEvent(Event& event)
         default:
         {
             event.type = Event::Type::None;
-            return false;
+            TranslateMessage(&message);
+            DispatchMessage(&message);
+            return true;
         }
         }
     }
+
+    return false;
 }
 
 void Engine::TWindow::Close()
 {
     if (m_hwnd)
     {
-        CloseWindow(m_hwnd);
+        DestroyWindow(m_hwnd);
 
         std::cout << "Windows closed by user\n";
-
-        m_isRunning = false;
-
     }
 }
