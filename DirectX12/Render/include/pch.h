@@ -26,5 +26,6 @@
 
 //General header
 #include "DebugMacro.h"
+#include "TColor.h"
 
 #endif //PCH_H

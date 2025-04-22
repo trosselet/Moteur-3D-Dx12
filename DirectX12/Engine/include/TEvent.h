@@ -9,6 +9,7 @@ namespace Engine
 		{
 			None = 0,
 			Closed,
+			Resized,
 		};
 
 		Type type = Type::None;

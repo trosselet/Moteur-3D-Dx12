@@ -1,10 +1,11 @@
 #include "pch.h"
 
-using namespace Engine;
+#include "TWindow.h"
+#include "TColor.h"
 
 int main()
 {
-    Engine::TWindow window(Vector2i(1920, 1080), "Window");
+    Engine::TWindow window(Vector2i(800, 600), "Window");
 
     Engine::Event event;
 
@@ -17,6 +18,10 @@ int main()
                 window.Close();
             }
         }
+
+        window.Clear(Render::Color::Green);
+        window.Draw();
+        window.Display();
 
     }
 
