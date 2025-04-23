@@ -2,6 +2,10 @@
 #define GRAPHIC_ENIGNE__H
 
 
+namespace Core
+{
+	class IDrawable;
+}
 
 namespace Render
 {
@@ -15,7 +19,7 @@ namespace Render
 
 		void Initialize(HWND hwnd, UINT width, UINT height);
 		void BeginFrame(Color clearColor);
-		void RenderFrame();
+		void RenderFrame(Core::IDrawable* drawable);
 		void EndFrame();
 
 		void ResizeWindow(UINT width, UINT height);

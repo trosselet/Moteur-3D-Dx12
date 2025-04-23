@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GraphicEgine.h"
 #include "DeviceResources.h"
+#include "TDrawable.h"
 
 namespace Render
 {
@@ -46,9 +47,9 @@ namespace Render
 
 	}
 
-	void GraphicEgine::RenderFrame()
+	void GraphicEgine::RenderFrame(Core::IDrawable* drawable)
 	{
-
+		drawable->Draw(m_pDeviceResources->GetCommandList());
 	}
 
 	void GraphicEgine::EndFrame()
