@@ -28,4 +28,7 @@
 #include "DebugMacro.h"
 #include "TColor.h"
 
+#include "TDrawable.h"
+#include "TTransform.h"
+
 #endif //PCH_H

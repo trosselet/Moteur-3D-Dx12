@@ -1,12 +1,11 @@
-#include "pch.h"
 #include "TTransform.h"
 
-Transform::Transform()
+Core::Transform::Transform()
 {
 
 }
 
-Transform::~Transform()
+Core::Transform::~Transform()
 {
 
 }

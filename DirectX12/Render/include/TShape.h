@@ -2,9 +2,10 @@
 #define SHAPE__H
 
 #include <DirectXMath.h>
-#include "TDrawable.h"
-#include "TTransform.h"
 #include "UploadBuffer.h"
+
+#include "../../Core/include/TDrawable.h"
+#include "../../Core/include/TTransform.h"
 
 namespace Render
 {
@@ -19,6 +20,7 @@ namespace Render
 		void Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* commandList) override;
 
 		virtual void BuildBuffers() = 0;
+		
 
 	protected:
 		struct Vertex
@@ -26,6 +28,9 @@ namespace Render
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMFLOAT4 color;
 		};
+
+		void UploadBuffers(Vertex* vertices, UINT vertexCount, UINT* indices, UINT indexCount);
+
 
 	protected:
 

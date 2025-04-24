@@ -243,7 +243,7 @@ void Render::DeviceResources::CreateSwapChain(HWND hwnd, UINT width, UINT height
     DXGI_SWAP_CHAIN_DESC1 desc = {};
     desc.Width = width;
     desc.Height = height;
-    desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.Stereo = false;
     desc.SampleDesc = { 1, 0 };
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

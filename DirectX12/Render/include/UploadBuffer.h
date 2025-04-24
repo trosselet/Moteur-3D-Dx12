@@ -1,6 +1,21 @@
 #ifndef UPLOAD_BUFFER__H
 #define UPLOAD_BUFFER__H
 
+//D12 header files
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+
+//PreCompiled lib files for d12:
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "D3D12.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "D3DCompiler.lib")
+
+#include "DebugMacro.h"
+
 namespace Render
 {
     template<typename T>
@@ -31,12 +46,12 @@ namespace Render
             bufferDesc.SampleDesc.Count = 1;
             bufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-            if (pDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(m_pUploadBuffer)) != S_OK)
+            if (pDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_pUploadBuffer)) != S_OK)
             {
                 PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to create upload buffer.");
             }
 
-            if (m_pUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_mappedData)) != S_OK)
+            if (m_pUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_pMappedData)) != S_OK)
             {
                 PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to map upload buffer.");
             }
@@ -50,12 +65,12 @@ namespace Render
                 m_pUploadBuffer->Unmap(0, nullptr);
                 m_pUploadBuffer->Release();
             }
-            m_mappedData = nullptr;
+            m_pMappedData = nullptr;
         }
 
         inline void CopyData(UINT elementIndex, const T& data)
         {
-            memcpy(m_mappedData + elementIndex * m_elementByteSize, &data, sizeof(T));
+            memcpy(m_pMappedData + elementIndex * m_elementByteSize, &data, sizeof(T));
         }
 
         inline ID3D12Resource* GetResource() const { return m_pUploadBuffer; }

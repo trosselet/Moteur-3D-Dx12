@@ -25,6 +25,7 @@ namespace Render
 		void ClearCurrentRenderTarget(Color color);
 		void ResetCommandList();
 
+		ID3D12Device* GetDevice() const { return m_pDevice; }
 		ID3D12CommandAllocator* GetAllocator() const { return m_pCommandAllocator; }
 		ID3D12GraphicsCommandList* GetCommandList() const { return m_pCommandList; }
 		ID3D12CommandQueue* GetCommandQueue() const { return m_pCommandQueue; };

@@ -2,6 +2,7 @@
 #include "TWindow.h"
 
 #include "GraphicEgine.h"
+#include "TDrawable.h"
 
 Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyle(0), m_isRunning(false), m_pGraphicEngine(new Render::GraphicEgine())
 {
@@ -92,6 +93,8 @@ bool Engine::TWindow::Initialize()
 
     m_pGraphicEngine->Initialize(m_hwnd, m_windowSize.x, m_windowSize.y);
 
+    m_pGraphicEngine->SetViewport(m_windowSize.x, m_windowSize.y);
+
     return m_isRunning;
 }
 
@@ -105,9 +108,9 @@ void Engine::TWindow::Clear(Render::Color clearColor)
     m_pGraphicEngine->BeginFrame(clearColor);
 }
 
-void Engine::TWindow::Draw()
+void Engine::TWindow::Draw(Core::IDrawable& drawable, const char* shaderPath)
 {
-    m_pGraphicEngine->RenderFrame();
+    m_pGraphicEngine->RenderFrame(drawable, shaderPath);
 }
 
 void Engine::TWindow::Display()

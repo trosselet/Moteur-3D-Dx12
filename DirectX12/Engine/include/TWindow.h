@@ -7,6 +7,12 @@
 #include "Utils.h"
 #include "TColor.h"
 
+
+namespace Core
+{
+	class IDrawable;
+}
+
 namespace Render
 {
 	class GraphicEgine;
@@ -31,7 +37,7 @@ namespace Engine
 		void OnDestroy();
 
 		void Clear(Render::Color clearColor = Render::Color(1.0f, 1.0f, 1.0f, 1.0f));
-		void Draw();
+		void Draw(Core::IDrawable& drawable, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
 		void Display();
 
 		Render::GraphicEgine* GetGraphicEngine() { return m_pGraphicEngine; };
