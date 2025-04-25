@@ -148,6 +148,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\TCamera.cpp" />
     <ClCompile Include="src\TWindow.cpp" />
     <ClCompile Include="src\Utils.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="include\Engine.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\TCamera.h" />
     <ClInclude Include="include\TEvent.h" />
     <ClInclude Include="include\TWindow.h" />
     <ClInclude Include="include\TWindowStyle.h" />

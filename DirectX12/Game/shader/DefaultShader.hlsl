@@ -10,11 +10,21 @@ struct VertexOut
     float4 color : COLOR;
 };
 
+cbuffer cbPass : register(b0)
+{
+    float4x4 gViewProj;
+};
+
+cbuffer cbPerObject : register(b1)
+{
+    float4x4 gWorld;
+};
 
 VertexOut vsmain(VertexIn vin)
 {
     VertexOut vout;
-    vout.position = float4(vin.position, 1.0f);
+    float4 posW = mul(float4(vin.position, 1.0f), gWorld);
+    vout.position = mul(posW, gViewProj);
     vout.color = vin.color;
     return vout;
 }

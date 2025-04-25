@@ -5,24 +5,33 @@
 #include "UploadBuffer.h"
 
 #include "../../Core/include/TDrawable.h"
-#include "../../Core/include/TTransform.h"
+#include "../../Core/include/TTransformable.h"
 
 namespace Render
 {
-	class Shape : public Core::IDrawable, public Core::Transform
+	class GraphicEngine;
+
+	class Shape : public Core::IDrawable, public Core::Transformable
 	{
+		struct ObjectData 
+		{
+			DirectX::XMFLOAT4X4 world;
+		};
+
 	public:
 
 		Shape();
 		virtual ~Shape();
 
-		
+	private:
+
 		void Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* commandList) override;
 
-		virtual void BuildBuffers() = 0;
 		
 
 	protected:
+		virtual void BuildBuffers() = 0;
+
 		struct Vertex
 		{
 			DirectX::XMFLOAT3 pos;
@@ -40,6 +49,8 @@ namespace Render
 		D3D12_VERTEX_BUFFER_VIEW m_vbv;
 		D3D12_INDEX_BUFFER_VIEW m_ibv;
 
+		UploadBuffer<ObjectData>* m_pConstantBuffer;
+
 		ID3D12Device* m_pDevice;
 
 		UINT m_vertexCount;
@@ -47,6 +58,8 @@ namespace Render
 
 		bool m_isInitialize;
 
+	private:
+		friend class GraphicEngine;
 	};
 }
 

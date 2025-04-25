@@ -1,16 +1,19 @@
 #include "pch.h"
-#include "GraphicEgine.h"
+#include "GraphicEngine.h"
 #include "DeviceResources.h"
-#include "TDrawable.h"
+#include "TShape.h"
 #include "PipelineStateObjectManager.h"
+#include "UploadBuffer.h"
+
+
 
 namespace Render
 {
-	GraphicEgine::GraphicEgine() : m_pDeviceResources(nullptr), m_pPsoManager(nullptr), m_rect(), m_viewport()
+	GraphicEngine::GraphicEngine() : m_pDeviceResources(nullptr), m_pPsoManager(nullptr), m_rect(), m_viewport()
 	{
 	}
 
-	GraphicEgine::~GraphicEgine()
+	GraphicEngine::~GraphicEngine()
 	{
 		if (m_pPsoManager)
 		{
@@ -26,7 +29,7 @@ namespace Render
 
 	}
 
-	void GraphicEgine::Initialize(HWND hwnd, UINT width, UINT height)
+	void GraphicEngine::Initialize(HWND hwnd, UINT width, UINT height, TRANSFORM* camera)
 	{
 		m_pDeviceResources = new DeviceResources();
 		m_pDeviceResources->Initialize(hwnd, width, height);
@@ -37,11 +40,32 @@ namespace Render
 
 		m_pPsoManager->CreatePipelineState("../Game/shader/DefaultShader.hlsl", L"../Game/shader/DefaultShader.hlsl");
 
+		m_pCam = camera;
+		m_pCam->Reset();
+		m_pCam->SetPosition(DirectX::XMFLOAT3{ 0.0f, 0.0f, -2.0f });
+
+		mGlobalConstantBuffer = new UploadBuffer<GlobalInformation>(m_pDeviceResources->GetDevice(), 1, true);
+
 		m_isInitialize = true;
 
 	}
 
-	void GraphicEgine::BeginFrame(Color clearColor)
+	void GraphicEngine::Update()
+	{
+		DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixInverse(nullptr, m_pCam->GetMatrix()));
+
+		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_view);
+		DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&m_proj);
+
+		DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiply(view, proj);
+
+		GlobalInformation info;
+		DirectX::XMStoreFloat4x4(&info.ViewProj, DirectX::XMMatrixTranspose(viewProj));
+
+		mGlobalConstantBuffer->CopyData(0, info);
+	}
+
+	void GraphicEngine::BeginFrame(Color clearColor)
 	{
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -65,7 +89,7 @@ namespace Render
 
 	}
 
-	void GraphicEgine::RenderFrame(Core::IDrawable& drawable, const char* shaderPath)
+	void GraphicEngine::RenderFrame(Shape& shape, const char* shaderPath)
 	{
 
 		PipelineStateConfig* psoConfig = m_pPsoManager->Get(shaderPath);
@@ -75,7 +99,9 @@ namespace Render
 			m_pDeviceResources->GetCommandList()->SetPipelineState(psoConfig->pipelineState);
 			m_pDeviceResources->GetCommandList()->SetGraphicsRootSignature(psoConfig->rootSignature);
 
-			drawable.Draw(m_pDeviceResources->GetDevice(), m_pDeviceResources->GetCommandList());
+			m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(0, mGlobalConstantBuffer->GetResource()->GetGPUVirtualAddress());
+
+			shape.Draw(m_pDeviceResources->GetDevice(), m_pDeviceResources->GetCommandList());
 		}
 		else
 		{
@@ -83,7 +109,7 @@ namespace Render
 		}
 	}
 
-	void GraphicEgine::EndFrame()
+	void GraphicEngine::EndFrame()
 	{
 		
 		D3D12_RESOURCE_BARRIER barrier = {};
@@ -106,13 +132,16 @@ namespace Render
 		m_pDeviceResources->ResetCommandList();
 	}
 
-	void GraphicEgine::ResizeWindow(UINT width, UINT height)
+	void GraphicEngine::ResizeWindow(UINT width, UINT height)
 	{
 		m_pDeviceResources->Resize(width, height);
 		SetViewport(width, height);
+
+		DirectX::XMMATRIX ProjMatrix = DirectX::XMMatrixPerspectiveFovLH(0.25f * 3.14f, 16.0f/9.0f, 0.1f, 500);
+		DirectX::XMStoreFloat4x4(&m_proj, ProjMatrix);
 	}
 
-	void GraphicEgine::SetViewport(UINT width, UINT height)
+	void GraphicEngine::SetViewport(UINT width, UINT height)
 	{
 		m_viewport.TopLeftX = 0;
 		m_viewport.TopLeftY = 0;
@@ -127,7 +156,7 @@ namespace Render
 		m_rect.bottom = m_viewport.Height;
 	}
 
-	void GraphicEgine::ReportLiveD3D12Objects()
+	void GraphicEngine::ReportLiveD3D12Objects()
 	{
 		IDXGIDebug1* debug = nullptr;
 

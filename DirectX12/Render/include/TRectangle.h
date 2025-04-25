@@ -3,12 +3,15 @@
 
 #include "TShape.h"
 
+#include "../../Core/include/Define.h"
+#include "../../Core/include/TVector.hpp"
+
 namespace Render
 {
 	class RectangleShape : public Shape
 	{
 	public:
-		RectangleShape();
+		RectangleShape(Vector3f position = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f scale = Vector3f{ 1.0f, 1.0f, 1.0f });
 		~RectangleShape();
 
 	private:

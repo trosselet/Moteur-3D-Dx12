@@ -21,7 +21,7 @@
     <ClInclude Include="include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GraphicEgine.h">
+    <ClInclude Include="include\GraphicEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\DeviceResources.h">
@@ -47,7 +47,7 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GraphicEgine.cpp">
+    <ClCompile Include="src\GraphicEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DeviceResources.cpp">

@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "TWindow.h"
 
-#include "GraphicEgine.h"
+#include "GraphicEngine.h"
 #include "TDrawable.h"
 
-Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyle(0), m_isRunning(false), m_pGraphicEngine(new Render::GraphicEgine())
+
+Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyle(0), m_isRunning(false), m_pGraphicEngine(new Render::GraphicEngine())
 {
 }
 
@@ -13,7 +14,7 @@ Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, int16 sty
     m_windowSize = windowSize;
     m_windowTitle = windowTitle;
     m_windowStyle = style;
-    m_pGraphicEngine = new Render::GraphicEgine();
+    m_pGraphicEngine = new Render::GraphicEngine();
     Initialize();
 }
 
@@ -93,11 +94,13 @@ bool Engine::TWindow::Initialize()
     ShowWindow(m_hwnd, SW_SHOW);
     UpdateWindow(m_hwnd);
 
-    m_isRunning = true;
+    camera = new Camera();
 
-    m_pGraphicEngine->Initialize(m_hwnd, m_windowSize.x, m_windowSize.y);
+    m_pGraphicEngine->Initialize(m_hwnd, m_windowSize.x, m_windowSize.y, &camera->GetTransform());
 
     m_pGraphicEngine->SetViewport(m_windowSize.x, m_windowSize.y);
+
+    m_isRunning = true;
 
     return m_isRunning;
 }
@@ -112,9 +115,9 @@ void Engine::TWindow::Clear(Color clearColor)
     m_pGraphicEngine->BeginFrame(clearColor);
 }
 
-void Engine::TWindow::Draw(Core::IDrawable& drawable, const char* shaderPath)
+void Engine::TWindow::Draw(Render::Shape& shape, const char* shaderPath)
 {
-    m_pGraphicEngine->RenderFrame(drawable, shaderPath);
+    m_pGraphicEngine->RenderFrame(shape, shaderPath);
 }
 
 void Engine::TWindow::Display()
@@ -124,6 +127,8 @@ void Engine::TWindow::Display()
 
 bool Engine::TWindow::PollEvent(Event& event)
 {
+    m_pGraphicEngine->Update();
+
     MSG message;
     if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
     {

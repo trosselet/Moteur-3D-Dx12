@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "TRectangle.h"
 
-Render::RectangleShape::RectangleShape()
+Render::RectangleShape::RectangleShape(Vector3f position, Vector3f scale)
 {
-
+	SetPosition(position);
+	SetScale(scale);
 }
 
 Render::RectangleShape::~RectangleShape()

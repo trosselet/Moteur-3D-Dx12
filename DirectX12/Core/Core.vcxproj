@@ -24,6 +24,7 @@
     <ClInclude Include="include\TColor.h" />
     <ClInclude Include="include\TDrawable.h" />
     <ClInclude Include="include\TTransform.h" />
+    <ClInclude Include="include\TTransformable.h" />
     <ClInclude Include="include\TVector2.hpp" />
     <ClInclude Include="include\TVector.hpp" />
     <ClInclude Include="include\TVector3.hpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="src\TColor.cpp" />
     <ClCompile Include="src\TDrawable.cpp" />
     <ClCompile Include="src\TTransform.cpp" />
+    <ClCompile Include="src\TTransformable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\TVector2.inl" />
@@ -133,6 +135,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -151,6 +154,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>

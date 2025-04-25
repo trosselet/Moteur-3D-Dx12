@@ -39,6 +39,9 @@
     <ClInclude Include="include\TColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\TTransformable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TTransform.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TTransformable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -132,9 +132,24 @@ void Render::PipelineStateObjectManager::CreateRootSignature(const char* name)
     }
 
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-    rootSignatureDesc.NumParameters = 0;
+    rootSignatureDesc.NumParameters = 2;
     rootSignatureDesc.NumStaticSamplers = 0;
     rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+    D3D12_ROOT_PARAMETER rootParameters[2] = {};
+
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[0].Descriptor.ShaderRegister = 0;
+    rootParameters[0].Descriptor.RegisterSpace = 0;
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+    
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[1].Descriptor.ShaderRegister = 1;
+    rootParameters[1].Descriptor.RegisterSpace = 0;
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+    rootSignatureDesc.pParameters = rootParameters;
 
     ID3DBlob* signature = nullptr;
     ID3DBlob* error = nullptr;

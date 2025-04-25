@@ -6,8 +6,11 @@ namespace Core
 	class IDrawable
 	{
 	public:
-		virtual void Draw(class ID3D12Device* pDevice, class ID3D12GraphicsCommandList* commandList) = 0;
+
 		virtual ~IDrawable() = default;
+	protected:
+		virtual void Draw(class ID3D12Device* pDevice, class ID3D12GraphicsCommandList* commandList) = 0;
+
 	};
 }
 

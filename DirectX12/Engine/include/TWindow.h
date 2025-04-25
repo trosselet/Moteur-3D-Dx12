@@ -5,23 +5,22 @@
 #include "../../Core/include/TVector.hpp"
 #include "../../Core/include/TColor.h"
 
+#include "../../Core/include/TTransform.h"
+
 #include "TWindowStyle.h"
 #include "TEvent.h"
 #include "Utils.h"
-
-
-namespace Core
-{
-	class IDrawable;
-}
+#include "TCamera.h"
 
 namespace Render
 {
-	class GraphicEgine;
+	class GraphicEngine;
+	class Shape;
 }
 
 namespace Engine
 {
+
 	class TWindow
 	{
 	public:
@@ -39,10 +38,13 @@ namespace Engine
 		void OnDestroy();
 
 		void Clear(Color clearColor = Color(1.0f, 1.0f, 1.0f, 1.0f));
-		void Draw(Core::IDrawable& drawable, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
+		void Draw(Render::Shape& shape, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
 		void Display();
 
-		Render::GraphicEgine* GetGraphicEngine() { return m_pGraphicEngine; };
+		Render::GraphicEngine* GetGraphicEngine() { return m_pGraphicEngine; };
+
+	public:
+		Camera* camera;
 
 	private:
 		bool Initialize();
@@ -58,7 +60,7 @@ namespace Engine
 		HWND m_hwnd;
 
 		//Graphics
-		Render::GraphicEgine* m_pGraphicEngine;
+		Render::GraphicEngine* m_pGraphicEngine;
 
 	};
 }

@@ -42,8 +42,21 @@ void Render::Shape::Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* comma
 		m_ibv.SizeInBytes = m_indexCount * sizeof(UINT);
 		m_ibv.Format = DXGI_FORMAT_R32_UINT;
 
+		m_pConstantBuffer = new UploadBuffer<ObjectData>(pDevice, 1, true);
+
 		m_isInitialize = true;
 	}
+
+	if (!m_transform.mIsUpdated)
+	{
+		m_transform.UpdateMatrix();
+	}
+
+	ObjectData objConstants = {};
+	DirectX::XMStoreFloat4x4(&objConstants.world, DirectX::XMMatrixTranspose(m_transform.GetMatrix()));
+	m_pConstantBuffer->CopyData(0, objConstants);
+
+	commandList->SetGraphicsRootConstantBufferView(1, m_pConstantBuffer->GetResource()->GetGPUVirtualAddress());
 
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList->IASetVertexBuffers(0, 1, &m_vbv);
