@@ -9,6 +9,9 @@ namespace Core
 		Transform();
 
 		virtual ~Transform();
+
+	protected:
+
 	};
 }
 

@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "TWindow.h"
-#include "TColor.h"
+#include "../../Core/include/TColor.h"
 #include "TRectangle.h"
 #include "Game.h"
 
@@ -23,7 +23,7 @@ int main()
             }
         }
 
-        window.Clear(Render::Color::Green);
+        window.Clear(Color::Green);
         window.Draw(*rectangle);
         window.Display();
 

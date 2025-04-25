@@ -8,7 +8,7 @@ Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyl
 {
 }
 
-Engine::TWindow::TWindow(Vector2i windowSize, const Int8* windowTitle, Uint32 style)
+Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, int16 style)
 {
     m_windowSize = windowSize;
     m_windowTitle = windowTitle;
@@ -107,7 +107,7 @@ void Engine::TWindow::OnDestroy()
     m_isRunning = false;
 }
 
-void Engine::TWindow::Clear(Render::Color clearColor)
+void Engine::TWindow::Clear(Color clearColor)
 {
     m_pGraphicEngine->BeginFrame(clearColor);
 }

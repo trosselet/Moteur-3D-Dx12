@@ -30,9 +30,6 @@
     <ClInclude Include="include\DebugMacro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TColor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\TShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DeviceResources.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TColor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TShape.cpp">

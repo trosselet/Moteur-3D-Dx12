@@ -1,11 +1,13 @@
 #ifndef TWINDOW__H
 #define TWINDOW__H
 
-#include "TVector2.h"
+#include "../../Core/include/Define.h"
+#include "../../Core/include/TVector.hpp"
+#include "../../Core/include/TColor.h"
+
 #include "TWindowStyle.h"
 #include "TEvent.h"
 #include "Utils.h"
-#include "TColor.h"
 
 
 namespace Core
@@ -26,7 +28,7 @@ namespace Engine
 		
 
 		TWindow();
-		TWindow(Vector2i windowSize, const Int8* windowTitle = "Window", Uint32 style = WindowStyle::Default);
+		TWindow(Vector2i windowSize, const int8* windowTitle = "Window", int16 style = WindowStyle::Default);
 		~TWindow();
 
 		inline bool IsOpen() const { return m_isRunning; };
@@ -36,7 +38,7 @@ namespace Engine
 		void Close();
 		void OnDestroy();
 
-		void Clear(Render::Color clearColor = Render::Color(1.0f, 1.0f, 1.0f, 1.0f));
+		void Clear(Color clearColor = Color(1.0f, 1.0f, 1.0f, 1.0f));
 		void Draw(Core::IDrawable& drawable, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
 		void Display();
 
@@ -48,8 +50,8 @@ namespace Engine
 	private:
 		//Window Initialisation
 		Vector2i m_windowSize;
-		const Int8* m_windowTitle;
-		Uint32 m_windowStyle;
+		const int8* m_windowTitle;
+		int16 m_windowStyle;
 
 		//Window param
 		bool m_isRunning;

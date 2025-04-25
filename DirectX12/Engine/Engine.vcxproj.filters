@@ -44,22 +44,11 @@
     <ClInclude Include="include\TWindowStyle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Defines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TVector2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\TVector2.inl">
-      <Filter>Header Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

@@ -24,6 +24,21 @@
     <ClInclude Include="include\TDrawable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TVector2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TVector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TVector3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TTransform.cpp">
@@ -32,5 +47,19 @@
     <ClCompile Include="src\TDrawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\TVector2.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\TVector.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\TVector3.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Utils.h"
 
-const wchar_t* Engine::Utils::GetWchar(const Int8* c)
+const wchar_t* Engine::Utils::GetWchar(const int8* c)
 {
     size_t charSize = strlen((const char*)c) + 1;
     wchar_t* wc = new wchar_t[charSize];
