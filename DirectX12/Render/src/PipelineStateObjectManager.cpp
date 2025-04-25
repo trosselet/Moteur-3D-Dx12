@@ -10,7 +10,22 @@ Render::PipelineStateObjectManager::~PipelineStateObjectManager()
 {
     for (auto& pso : m_pipelineStates)
     {
-        delete pso.second;
+        if (pso.second)
+        {
+            if (pso.second->pipelineState)
+            {
+                pso.second->pipelineState->Release();
+                pso.second->pipelineState = nullptr;
+            }
+
+            if (pso.second->rootSignature)
+            {
+                pso.second->rootSignature->Release();
+                pso.second->rootSignature = nullptr;
+            }
+
+            delete pso.second;
+        }
     }
     m_pipelineStates.clear();
 
@@ -19,6 +34,8 @@ Render::PipelineStateObjectManager::~PipelineStateObjectManager()
         m_pRootSignature->Release();
         m_pRootSignature = nullptr;
     }
+
+    m_pDevice = nullptr;
 }
 
 void Render::PipelineStateObjectManager::Initialize(ID3D12Device* device)
@@ -26,7 +43,7 @@ void Render::PipelineStateObjectManager::Initialize(ID3D12Device* device)
     m_pDevice = device;
 }
 
-void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, const std::wstring& shaderPath, D3D12_INPUT_LAYOUT_DESC inputLayout)
+void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, const std::wstring& shaderPath)
 {
     if (!m_pDevice)
     {
@@ -38,8 +55,14 @@ void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, c
 
     CreateRootSignature(name);
 
+    std::string shaderPathStr(shaderPath.begin(), shaderPath.end());
+    std::vector<Render::InputLayoutElement> inputLayoutElements = ParseVertexInStruct(shaderPathStr);
+
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs;
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = CreateInputLayoutDescFromElements(inputLayoutElements, inputElementDescs);
+
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-    psoDesc.InputLayout = inputLayout;
+    psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.pRootSignature = m_pRootSignature;
     psoDesc.VS = { vsBlob->GetBufferPointer(), vsBlob->GetBufferSize() };
     psoDesc.PS = { psBlob->GetBufferPointer(), psBlob->GetBufferSize() };
@@ -79,6 +102,7 @@ void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, c
     }
 
     PipelineStateConfig* psoConfig = new PipelineStateConfig();
+    m_pRootSignature->AddRef();
     psoConfig->rootSignature = m_pRootSignature;
     psoConfig->pipelineState = pso;
 
@@ -101,6 +125,12 @@ Render::PipelineStateConfig* Render::PipelineStateObjectManager::Get(const char*
 
 void Render::PipelineStateObjectManager::CreateRootSignature(const char* name)
 {
+    if (m_pRootSignature)
+    {
+        m_pRootSignature->Release();
+        m_pRootSignature = nullptr;
+    }
+
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
     rootSignatureDesc.NumParameters = 0;
     rootSignatureDesc.NumStaticSamplers = 0;
@@ -111,9 +141,8 @@ void Render::PipelineStateObjectManager::CreateRootSignature(const char* name)
 
     if (D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error) != S_OK)
     {
-        PRINT_CONSOLE_OUTPUT("[RENDER]: Error failed to serialized the root signature! \n");
+        PRINT_CONSOLE_OUTPUT("[RENDER]: Error failed to serialize the root signature! \n");
     }
-
 
     if (m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature)) != S_OK)
     {
@@ -122,6 +151,7 @@ void Render::PipelineStateObjectManager::CreateRootSignature(const char* name)
 
     signature->Release();
 }
+
 
 ID3DBlob* Render::PipelineStateObjectManager::CompileShader(const std::wstring& path, const char* target)
 {
@@ -132,7 +162,7 @@ ID3DBlob* Render::PipelineStateObjectManager::CompileShader(const std::wstring& 
     if (!target)
         return nullptr;
 
-    if (target == "vs_5_0")
+    if (strcmp(target, "vs_5_0") == 0)
     {
         entryPoint = "vsmain";
     }
@@ -150,6 +180,13 @@ ID3DBlob* Render::PipelineStateObjectManager::CompileShader(const std::wstring& 
         //If error code = -2147024893 error path
         //Can be checked with programmer calculator in DEC row to translate in HEX
         PRINT_CONSOLE_OUTPUT("Shader loading error was: " << hr << ", for shader :" << path << "\n");
+
+        if (compiledShader)
+        {
+            compiledShader->Release();
+            compiledShader = nullptr;
+        }
+
     }
 
     if (errorBlob)
@@ -162,4 +199,89 @@ ID3DBlob* Render::PipelineStateObjectManager::CompileShader(const std::wstring& 
 
     return compiledShader;
 
+}
+
+Render::T_DXGI_INFO Render::PipelineStateObjectManager::HlslTypeToDxgiFormat(const std::string& type)
+{
+    if (type == "float")   return { DXGI_FORMAT_R32_FLOAT, 4};
+    if (type == "float2")  return {DXGI_FORMAT_R32G32_FLOAT, 8};
+    if (type == "float3")  return {DXGI_FORMAT_R32G32B32_FLOAT, 12};
+    if (type == "float4")  return {DXGI_FORMAT_R32G32B32A32_FLOAT, 16};
+    return { DXGI_FORMAT_UNKNOWN, 0 };
+}
+
+std::vector<Render::InputLayoutElement> Render::PipelineStateObjectManager::ParseVertexInStruct(const std::string& hlslFilePath)
+{
+    std::ifstream file(hlslFilePath);
+    if (!file.is_open())
+    {
+        PRINT_CONSOLE_OUTPUT("[RENDER]: Error failed to load hlsl file: " << hlslFilePath.c_str() << "\n");
+        return {};
+    }
+
+    std::vector<InputLayoutElement> elements;
+    std::string line;
+    bool insideStruct = false;
+
+    std::regex fieldRegex(R"(\s*(\w+)\s+(\w+)\s*:\s*(\w+)\s*;)");
+
+    while (std::getline(file, line))
+    {
+        if (line.find("struct VertexIn") != std::string::npos)
+        {
+            insideStruct = true;
+            continue;
+        }
+
+        if (insideStruct)
+        {
+            if (line.find("};") != std::string::npos)
+            {
+                break;
+            }
+
+            std::smatch match;
+            if (std::regex_match(line, match, fieldRegex))
+            {
+                InputLayoutElement element;
+                element.type = match[1];
+                element.name = match[2];
+                element.semanticName = match[3];
+                element.dxgi_info = HlslTypeToDxgiFormat(element.type);
+                elements.push_back(element);
+            }
+        }
+    }
+
+
+    return elements;
+}
+
+D3D12_INPUT_LAYOUT_DESC Render::PipelineStateObjectManager::CreateInputLayoutDescFromElements(const std::vector<InputLayoutElement>& elements, std::vector<D3D12_INPUT_ELEMENT_DESC>& outDescs)
+{
+    outDescs.clear();
+
+    UINT offset = 0;
+    for (size_t i = 0; i < elements.size(); ++i)
+    {
+        const auto& elem = elements[i];
+
+        D3D12_INPUT_ELEMENT_DESC desc = {};
+        desc.SemanticName = elem.semanticName.c_str();
+        desc.SemanticIndex = 0;
+        desc.Format = elem.dxgi_info.format;
+        desc.InputSlot = 0;
+        desc.AlignedByteOffset = offset;
+        desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+        desc.InstanceDataStepRate = 0;
+
+        offset += elem.dxgi_info.byteAlignement;
+        outDescs.push_back(desc);
+    }
+
+    D3D12_INPUT_LAYOUT_DESC inputLayout = {};
+    inputLayout.pInputElementDescs = outDescs.data();
+    inputLayout.NumElements = static_cast<UINT>(outDescs.size());
+
+    return inputLayout;
 }

@@ -1,12 +1,17 @@
 #include "pch.h"
 #include "DeviceResources.h"
 
-Render::DeviceResources::DeviceResources()
+Render::DeviceResources::DeviceResources() : m_bufferCount(0), m_currentFenceValue(0), m_currentSwapChainBuffer(0), 
+m_fenceEvent(nullptr), m_pAdapter(nullptr), m_pDevice(nullptr), m_pCommandQueue(nullptr), m_pCommandAllocator(nullptr), 
+m_pCommandList(nullptr), m_pSwapChain(nullptr), m_pFactory(nullptr), m_pFence(nullptr), m_pRenderTargets(), 
+m_pRtvDescriptorHeap(nullptr), m_rtvHeapIncrement(0)
 {
 }
 
 Render::DeviceResources::~DeviceResources()
 {
+    FlushQueue(FrameCount);
+    ReleaseResources();
 }
 
 void Render::DeviceResources::Initialize(HWND hwnd, UINT width, UINT height)
@@ -84,20 +89,20 @@ void Render::DeviceResources::Resize(UINT width, UINT height)
 
     DXGI_SWAP_CHAIN_DESC desc = {};
     IDXGISwapChain* pBaseSwapChain = nullptr;
-    if (SUCCEEDED(m_pSwapChain->QueryInterface(IID_PPV_ARGS(&pBaseSwapChain))))
+    if (m_pSwapChain->QueryInterface(IID_PPV_ARGS(&pBaseSwapChain)) == S_OK)
     {
         pBaseSwapChain->GetDesc(&desc);
         pBaseSwapChain->Release();
     }
 
-    if (FAILED(m_pSwapChain->ResizeBuffers(FrameCount, width, height, desc.BufferDesc.Format, desc.Flags)))
+    if (m_pSwapChain->ResizeBuffers(FrameCount, width, height, desc.BufferDesc.Format, desc.Flags) != S_OK)
     {
         PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to resize swap chain buffers.");
         return;
     }
 
     IDXGISwapChain3* pSwapChain3 = nullptr;
-    if (SUCCEEDED(m_pSwapChain->QueryInterface(IID_PPV_ARGS(&pSwapChain3))))
+    if (m_pSwapChain->QueryInterface(IID_PPV_ARGS(&pSwapChain3)) == S_OK)
     {
         m_currentSwapChainBuffer = pSwapChain3->GetCurrentBackBufferIndex();
         pSwapChain3->Release();
@@ -134,6 +139,80 @@ void Render::DeviceResources::WaitForSynchronisation()
     }
 }
 
+void Render::DeviceResources::ReleaseResources()
+{
+    WaitForSynchronisation();
+
+    if (m_fenceEvent)
+    {
+        CloseHandle(m_fenceEvent);
+        m_fenceEvent = nullptr;
+    }
+
+    if (m_pFence)
+    {
+        m_pFence->Release();
+        m_pFence = nullptr;
+    }
+
+    if (m_pCommandList)
+    {
+        m_pCommandList->Release();
+        m_pCommandList = nullptr;
+    }
+
+    if (m_pCommandAllocator)
+    {
+        m_pCommandAllocator->Release();
+        m_pCommandAllocator = nullptr;
+    }
+
+    if (m_pCommandQueue)
+    {
+        m_pCommandQueue->Release();
+        m_pCommandQueue = nullptr;
+    }
+
+    for (UINT i = 0; i < FrameCount; ++i)
+    {
+        if (m_pRenderTargets[i])
+        {
+            m_pRenderTargets[i]->Release();
+            m_pRenderTargets[i] = nullptr;
+        }
+    }
+
+    if (m_pRtvDescriptorHeap)
+    {
+        m_pRtvDescriptorHeap->Release();
+        m_pRtvDescriptorHeap = nullptr;
+    }
+
+    if (m_pSwapChain)
+    {
+        m_pSwapChain->Release();
+        m_pSwapChain = nullptr;
+    }
+
+    if (m_pAdapter)
+    {
+        m_pAdapter->Release();
+        m_pAdapter = nullptr;
+    }
+
+    if (m_pFactory)
+    {
+        m_pFactory->Release();
+        m_pFactory = nullptr;
+    }
+
+    if (m_pDevice)
+    {
+        m_pDevice->Release();
+        m_pDevice = nullptr;
+    }
+}
+
 void Render::DeviceResources::CreateDevice()
 {
 #ifdef _DEBUG
@@ -142,6 +221,7 @@ void Render::DeviceResources::CreateDevice()
     if (D3D12GetDebugInterface(IID_PPV_ARGS(&pDebugController)) == S_OK)
     {
         pDebugController->EnableDebugLayer();
+        //pDebugController->SetEnableGPUBasedValidation(TRUE);
         pDebugController->Release();
     }
     else
@@ -158,7 +238,7 @@ void Render::DeviceResources::CreateDevice()
         PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating DXGIFactory, At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
     }
 
-    IDXGIFactory6* pFactory6;
+    IDXGIFactory6* pFactory6 = nullptr;
 
     if (m_pFactory->QueryInterface(IID_PPV_ARGS(&pFactory6)) == S_OK)
     {
@@ -166,6 +246,9 @@ void Render::DeviceResources::CreateDevice()
         {
             PRINT_CONSOLE_OUTPUT(" [RENDER]: Error finding the adapter,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
         }
+
+        pFactory6->Release();
+        pFactory6 = nullptr;
     }
     else
     {
@@ -286,6 +369,32 @@ void Render::DeviceResources::CreateRenderTargets()
 
         m_pDevice->CreateRenderTargetView(m_pRenderTargets[i], 0, cpuHandle);
 
+    }
+}
+
+void Render::DeviceResources::FlushQueue(UINT bufferCount)
+{
+    if (!m_pCommandQueue || !m_pFence || !m_fenceEvent)
+        return;
+
+    m_currentFenceValue++;
+    UINT64 fenceToWait = m_currentFenceValue;
+
+    if (FAILED(m_pCommandQueue->Signal(m_pFence, fenceToWait)))
+    {
+        PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to signal fence in FlushQueue.\n");
+        return;
+    }
+
+    if (m_pFence->GetCompletedValue() < fenceToWait)
+    {
+        if (FAILED(m_pFence->SetEventOnCompletion(fenceToWait, m_fenceEvent)))
+        {
+            PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to set event on completion in FlushQueue.\n");
+            return;
+        }
+
+        WaitForSingleObject(m_fenceEvent, INFINITE);
     }
 }
 

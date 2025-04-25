@@ -32,12 +32,17 @@ namespace Render
 
 		void WaitForSynchronisation();
 
+
+
 	private:
+		void ReleaseResources();
 		void CreateDevice();
 		void CreateCommandQueue();
 		void CreateCommandList();
 		void CreateSwapChain(HWND hwnd, UINT width, UINT height);
 		void CreateRenderTargets();
+
+		void FlushQueue(UINT bufferCount);
 
 	private:
 

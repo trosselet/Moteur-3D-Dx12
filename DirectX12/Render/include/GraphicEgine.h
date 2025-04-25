@@ -29,6 +29,8 @@ namespace Render
 
 		void SetViewport(UINT width, UINT height);
 
+		void ReportLiveD3D12Objects();
+
 	private:
 		DeviceResources* m_pDeviceResources;
 		PipelineStateObjectManager* m_pPsoManager;

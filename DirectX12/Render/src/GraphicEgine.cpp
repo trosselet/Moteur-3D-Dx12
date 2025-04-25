@@ -6,21 +6,24 @@
 
 namespace Render
 {
-	GraphicEgine::GraphicEgine() : m_pDeviceResources(nullptr)
+	GraphicEgine::GraphicEgine() : m_pDeviceResources(nullptr), m_pPsoManager(nullptr), m_rect(), m_viewport()
 	{
 	}
 
 	GraphicEgine::~GraphicEgine()
 	{
+		if (m_pPsoManager)
+		{
+			delete m_pPsoManager;
+		}
+
 		if (m_pDeviceResources)
 		{
 			delete m_pDeviceResources;
 		}
 
-		if (m_pPsoManager)
-		{
-			delete m_pPsoManager;
-		}
+		ReportLiveD3D12Objects();
+
 	}
 
 	void GraphicEgine::Initialize(HWND hwnd, UINT width, UINT height)
@@ -32,15 +35,7 @@ namespace Render
 
 		m_pPsoManager->Initialize(m_pDeviceResources->GetDevice());
 
-		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		};
-
-		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {inputLayout, _countof(inputLayout) };
-
-		m_pPsoManager->CreatePipelineState("../Game/shader/DefaultShader.hlsl", L"../Game/shader/DefaultShader.hlsl", inputLayoutDesc);
+		m_pPsoManager->CreatePipelineState("../Game/shader/DefaultShader.hlsl", L"../Game/shader/DefaultShader.hlsl");
 
 		m_isInitialize = true;
 
@@ -130,5 +125,18 @@ namespace Render
 		m_rect.right = m_viewport.Width;
 		m_rect.top = 0;
 		m_rect.bottom = m_viewport.Height;
+	}
+
+	void GraphicEgine::ReportLiveD3D12Objects()
+	{
+		IDXGIDebug1* debug = nullptr;
+
+		if (DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)) == S_OK)
+		{
+			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+			debug->Release();
+			debug = nullptr;
+		}
+
 	}
 }

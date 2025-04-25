@@ -19,6 +19,10 @@ Engine::TWindow::TWindow(Vector2i windowSize, const Int8* windowTitle, Uint32 st
 
 Engine::TWindow::~TWindow()
 {
+    if (m_pGraphicEngine)
+    {
+        delete m_pGraphicEngine;
+    }
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

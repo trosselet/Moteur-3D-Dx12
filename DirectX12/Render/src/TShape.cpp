@@ -8,6 +8,19 @@ m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr)
 
 Render::Shape::~Shape()
 {
+	if (m_pVertexBuffer)
+	{
+		delete m_pVertexBuffer;
+		m_pVertexBuffer = nullptr;
+	}
+
+	if (m_pIndexBuffer)
+	{
+		delete m_pIndexBuffer;
+		m_pIndexBuffer = nullptr;
+	}
+
+	m_pDevice = nullptr;
 }
 
 void Render::Shape::Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* commandList)

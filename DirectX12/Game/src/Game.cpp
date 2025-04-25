@@ -29,5 +29,7 @@ int main()
 
     }
 
+    delete rectangle;
+
     return 0;
 }
