@@ -20,10 +20,16 @@ Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, int16 sty
 
 Engine::TWindow::~TWindow()
 {
+    if (camera)
+    {
+        delete camera;
+    }
+
     if (m_pGraphicEngine)
     {
         delete m_pGraphicEngine;
     }
+
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

@@ -19,12 +19,14 @@ namespace Core
 		void SetRotationX(float32 angle);
 		void SetRotationY(float32 angle);
 		void SetRotationZ(float32 angle);
+		void SetRotationYPR(Vector3f rot);
 		void SetScale(Vector3f scale);
 
 		void Translate(Vector3f offset);
 		void RotateX(float32 angle);
 		void RotateY(float32 angle);
 		void RotateZ(float32 angle);
+		void RotateYPR(Vector3f rot);
 		void Scale(Vector3f offset);
 
 		Vector3f GetPosition();

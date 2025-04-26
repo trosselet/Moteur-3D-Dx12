@@ -30,6 +30,8 @@ void Render::DeviceResources::Initialize(HWND hwnd, UINT width, UINT height)
     }
     m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
+    DebugSetName();
+
 }
 
 void Render::DeviceResources::Present(bool vsync)
@@ -61,11 +63,6 @@ void Render::DeviceResources::ExecuteTheCommandList()
     m_currentFenceValue++;
     m_pCommandQueue->Signal(m_pFence, m_currentFenceValue);
 
-}
-
-void Render::DeviceResources::ClearCurrentRenderTarget(Color color)
-{
-    
 }
 
 void Render::DeviceResources::ResetCommandList()
@@ -119,25 +116,63 @@ void Render::DeviceResources::Resize(UINT width, UINT height)
 
 void Render::DeviceResources::WaitForSynchronisation()
 {
-    ID3D12Fence* fence = GetD3D12Fence();
-    UINT64 fenceValue = GetD3D12CurrentFenceValue() + 1;
-    GetCommandQueue()->Signal(fence, fenceValue);
+    UINT64 fenceValue = ++m_currentFenceValue;
+    m_pCommandQueue->Signal(m_pFence, fenceValue);
 
-    if (fence->GetCompletedValue() < fenceValue)
+    if (m_pFence->GetCompletedValue() < fenceValue)
     {
-        HANDLE fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        if (fenceEvent)
+        m_pFence->SetEventOnCompletion(fenceValue, m_fenceEvent);
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+    }
+}
+
+void Render::DeviceResources::DebugSetName()
+{
+    if (m_pDevice)
+    {
+        m_pDevice->SetName(L"Device");
+    }
+
+    if (m_pSwapChain)
+    {
+        m_pSwapChain->SetPrivateData(WKPDID_D3DDebugObjectNameW, sizeof(L"SwapChain") - 2, L"SwapChain");
+    }
+
+    if (m_pCommandQueue)
+    {
+        m_pCommandQueue->SetName(L"CommandQueue");
+    }
+
+    if (m_pCommandAllocator)
+    {
+        m_pCommandAllocator->SetName(L"CommandAllocator");
+    }
+
+    if (m_pCommandList)
+    {
+        m_pCommandList->SetName(L"CommandList");
+    }
+
+    if (m_pFence)
+    {
+        m_pFence->SetName(L"Fence");
+    }
+
+    if (m_pRtvDescriptorHeap)
+    {
+        m_pRtvDescriptorHeap->SetName(L"RTVDescriptorHeap");
+    }
+
+    for (UINT i = 0; i < FrameCount; ++i)
+    {
+        if (m_pRenderTargets[i])
         {
-            fence->SetEventOnCompletion(fenceValue, fenceEvent);
-            WaitForSingleObject(fenceEvent, INFINITE);
-            CloseHandle(fenceEvent);
-        }
-        else
-        {
-            PRINT_CONSOLE_OUTPUT("[RENDER]: Error failed to create Fence Event!" << std::endl);
+            std::wstring name = L"RenderTarget[" + std::to_wstring(i) + L"]";
+            m_pRenderTargets[i]->SetName(name.c_str());
         }
     }
 }
+
 
 void Render::DeviceResources::ReleaseResources()
 {
@@ -221,7 +256,6 @@ void Render::DeviceResources::CreateDevice()
     if (D3D12GetDebugInterface(IID_PPV_ARGS(&pDebugController)) == S_OK)
     {
         pDebugController->EnableDebugLayer();
-        //pDebugController->SetEnableGPUBasedValidation(TRUE);
         pDebugController->Release();
     }
     else
@@ -273,11 +307,6 @@ void Render::DeviceResources::CreateCommandQueue()
     if (m_pDevice->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_pCommandQueue)) != S_OK)
     {
         PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the command queue,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
-    }
-
-    if (m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence)) != S_OK)
-    {
-        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the fence,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
     }
 }
 

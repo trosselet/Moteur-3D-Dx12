@@ -33,6 +33,12 @@ void Core::Transformable::SetRotationZ(float32 angle)
 	m_transform.SetRotationYPR(_ypr);
 }
 
+void Core::Transformable::SetRotationYPR(Vector3f rot)
+{
+	DirectX::FXMVECTOR _ypr = DirectX::XMVectorSet(rot.x, rot.y, rot.z, m_transform.GetRotationFLOAT().w);
+	m_transform.SetRotationYPR(_ypr);
+}
+
 void Core::Transformable::SetScale(Vector3f scale)
 {
 	DirectX::FXMVECTOR _vec = DirectX::XMVectorSet(scale.x, scale.y, scale.z, 1.0f);
@@ -57,6 +63,11 @@ void Core::Transformable::RotateY(float32 angle)
 void Core::Transformable::RotateZ(float32 angle)
 {
 	m_transform.RotateYPR(DirectX::XMFLOAT3(0, 0, angle));
+}
+
+void Core::Transformable::RotateYPR(Vector3f rot)
+{
+	m_transform.RotateYPR(DirectX::XMFLOAT3(rot.x, rot.y, rot.z));
 }
 
 void Core::Transformable::Scale(Vector3f offset)

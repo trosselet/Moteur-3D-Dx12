@@ -22,7 +22,6 @@ namespace Render
 		ID3D12Fence* GetD3D12Fence() { return m_pFence; };
 		UINT64 GetD3D12CurrentFenceValue() { return m_currentFenceValue; };
 
-		void ClearCurrentRenderTarget(Color color);
 		void ResetCommandList();
 
 		ID3D12Device* GetDevice() const { return m_pDevice; }
@@ -32,7 +31,7 @@ namespace Render
 
 		void WaitForSynchronisation();
 
-
+		void DebugSetName();
 
 	private:
 		void ReleaseResources();

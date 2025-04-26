@@ -20,6 +20,11 @@ namespace Render
 			delete m_pPsoManager;
 		}
 
+		if (mGlobalConstantBuffer)
+		{
+			delete mGlobalConstantBuffer;
+		}
+
 		if (m_pDeviceResources)
 		{
 			delete m_pDeviceResources;
@@ -42,7 +47,7 @@ namespace Render
 
 		m_pCam = camera;
 		m_pCam->Reset();
-		m_pCam->SetPosition(DirectX::XMFLOAT3{ 0.0f, 0.0f, -2.0f });
+		m_pCam->SetPosition(DirectX::XMFLOAT3{ 0.0f, 0.0f, -5.0f });
 
 		mGlobalConstantBuffer = new UploadBuffer<GlobalInformation>(m_pDeviceResources->GetDevice(), 1, true);
 
@@ -77,7 +82,6 @@ namespace Render
 
 		m_pDeviceResources->GetCommandList()->ResourceBarrier(1, &barrier);
 
-		m_pDeviceResources->ClearCurrentRenderTarget(clearColor);
 
 		const float color[4] = { clearColor.r, clearColor.g, clearColor.b, clearColor.a };
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_pDeviceResources->GetCurrentRTV();

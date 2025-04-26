@@ -12,6 +12,7 @@ int main()
     Engine::Event event;
 
     Render::RectangleShape* rectangle = new Render::RectangleShape();
+    Render::RectangleShape* rectangle2 = new Render::RectangleShape(Vector3f(-1.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f));
 
     float angle = 0;
 
@@ -36,35 +37,44 @@ int main()
         Vector3f forward = window.camera->Forward();
         Vector3f right = window.camera->Right();
 
-        if (Z) {
+        if (Z) 
+        {
             window.camera->Translate(Vector3f{ forward.x * 0.05f, 0, forward.z * 0.05f });
         }
-        if (Q) {
+        if (Q) 
+        {
             window.camera->Translate(Vector3f{ -right.x * 0.05f, 0, -right.z * 0.05f });
         }
-        if (S) {
+        if (S) 
+        {
             window.camera->Translate(Vector3f{ -forward.x * 0.05f, 0, -forward.z * 0.05f });
         }
-        if (D) {
+        if (D) 
+        {
             window.camera->Translate(Vector3f{ right.x * 0.05f, 0, right.z * 0.05f });
         }
 
-        if (A) {
-            angle -= 0.01f;
+        if (A) 
+        {
+            window.camera->RotateYPR(Vector3f(-0.01f, 0.0f, 0.0f));
         }
-        if (E) {
-            angle += 0.01f;
+        if (E) 
+        {
+            window.camera->RotateYPR(Vector3f(0.01f, 0.0f, 0.0f));
         }
-        window.camera->SetRotationX(angle);
+        
 
         //rectangle->RotateZ(0.1f);
+        
 
         window.Clear(Color::Black);
         window.Draw(*rectangle);
+        window.Draw(*rectangle2);
         window.Display();
 
     }
 
+    delete rectangle2;
     delete rectangle;
 
     return 0;
