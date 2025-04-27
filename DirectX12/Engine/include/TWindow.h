@@ -27,7 +27,7 @@ namespace Engine
 		
 
 		TWindow();
-		TWindow(Vector2i windowSize, const int8* windowTitle = "Window", int16 style = WindowStyle::Default);
+		TWindow(Vector2i windowSize, const int8* windowTitle = "Window", uint32 style = WindowStyle::Default);
 		~TWindow();
 
 		inline bool IsOpen() const { return m_isRunning; };
@@ -53,7 +53,7 @@ namespace Engine
 		//Window Initialisation
 		Vector2i m_windowSize;
 		const int8* m_windowTitle;
-		int16 m_windowStyle;
+		uint32 m_windowStyle;
 
 		//Window param
 		bool m_isRunning;

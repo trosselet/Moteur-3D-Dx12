@@ -6,6 +6,7 @@
 
 #include "../../Core/include/TDrawable.h"
 #include "../../Core/include/TTransformable.h"
+#include "../../Core/include/TColor.h"
 
 namespace Render
 {
@@ -55,6 +56,8 @@ namespace Render
 
 		UINT m_vertexCount;
 		UINT m_indexCount;
+
+		Color m_color;
 
 		bool m_isInitialize;
 

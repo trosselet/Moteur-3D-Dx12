@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "TRectangle.h"
 
-Render::RectangleShape::RectangleShape(Vector3f position, Vector3f scale)
+Render::RectangleShape::RectangleShape(Vector3f position, Vector3f scale, Color color)
 {
 	SetPosition(position);
 	SetScale(scale);
+	m_color = color;
 }
 
 Render::RectangleShape::~RectangleShape()
@@ -16,10 +17,10 @@ void Render::RectangleShape::BuildBuffers()
 {
 	Vertex vertices[] =
 	{
-		{{-0.5f,  0.5f, 0.0f}, {1, 0, 0, 1}},
-		{{ 0.5f,  0.5f, 0.0f}, {0, 1, 0, 1}},
-		{{-0.5f, -0.5f, 0.0f}, {0, 0, 1, 1}},
-		{{ 0.5f, -0.5f, 0.0f}, {1, 1, 0, 1}},
+		{{-0.5f,  0.5f, 0.0f}, {m_color.r, m_color.g, m_color.b, 1}},
+		{{ 0.5f,  0.5f, 0.0f}, {m_color.r, m_color.g, m_color.b, 1}},
+		{{-0.5f, -0.5f, 0.0f}, {m_color.r, m_color.g, m_color.b, 1}},
+		{{ 0.5f, -0.5f, 0.0f}, {m_color.r, m_color.g, m_color.b, 1}},
 	};
 
 	UINT indices[] =

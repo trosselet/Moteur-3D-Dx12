@@ -2,7 +2,7 @@
 #include "TShape.h"
 
 Render::Shape::Shape() : m_vbv(), m_ibv(), m_pIndexBuffer(nullptr), m_pVertexBuffer(nullptr), m_isInitialize(false), 
-m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr), m_pConstantBuffer(nullptr)
+m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr), m_pConstantBuffer(nullptr), m_color(Color::White)
 {
 }
 

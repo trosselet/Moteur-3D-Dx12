@@ -11,7 +11,7 @@ namespace Render
 	class RectangleShape : public Shape
 	{
 	public:
-		RectangleShape(Vector3f position = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f scale = Vector3f{ 1.0f, 1.0f, 1.0f });
+		RectangleShape(Vector3f position = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f scale = Vector3f{ 1.0f, 1.0f, 1.0f }, Color color = Color::White);
 		~RectangleShape();
 
 	private:

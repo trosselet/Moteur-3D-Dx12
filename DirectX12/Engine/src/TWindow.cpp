@@ -9,7 +9,7 @@ Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyl
 {
 }
 
-Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, int16 style)
+Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, uint32 style)
 {
     m_windowSize = windowSize;
     m_windowTitle = windowTitle;

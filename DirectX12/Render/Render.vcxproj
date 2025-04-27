@@ -25,6 +25,8 @@
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\GraphicEngine.h" />
     <ClInclude Include="include\PipelineStateObjectManager.h" />
+    <ClInclude Include="include\TCircle.h" />
+    <ClInclude Include="include\TCube.h" />
     <ClInclude Include="include\TRectangle.h" />
     <ClInclude Include="include\TShape.h" />
     <ClInclude Include="include\UploadBuffer.h" />
@@ -37,6 +39,8 @@
     </ClCompile>
     <ClCompile Include="src\GraphicEngine.cpp" />
     <ClCompile Include="src\PipelineStateObjectManager.cpp" />
+    <ClCompile Include="src\TCircle.cpp" />
+    <ClCompile Include="src\TCube.cpp" />
     <ClCompile Include="src\TRectangle.cpp" />
     <ClCompile Include="src\TShape.cpp" />
     <ClCompile Include="src\UploadBuffer.cpp" />

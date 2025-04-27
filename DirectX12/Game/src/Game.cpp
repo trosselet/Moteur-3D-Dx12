@@ -4,6 +4,8 @@
 
 #include "TWindow.h"
 #include "TRectangle.h"
+#include "TCircle.h"
+#include "TCube.h"
 
 int main()
 {
@@ -12,7 +14,8 @@ int main()
     Engine::Event event;
 
     Render::RectangleShape* rectangle = new Render::RectangleShape();
-    Render::RectangleShape* rectangle2 = new Render::RectangleShape(Vector3f(-1.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f));
+    Render::CircleShape* circle = new Render::CircleShape(Vector3f(-2.0f, 0.0f, 0.0f), 1.0f, Color::Red);
+    Render::CubeShape* cube = new Render::CubeShape(Vector3f(1.0f, 0.0f, 0.0f), 1.0f, Color::Green);
 
     float angle = 0;
 
@@ -69,12 +72,14 @@ int main()
 
         window.Clear(Color::Black);
         window.Draw(*rectangle);
-        window.Draw(*rectangle2);
+        window.Draw(*circle);
+        window.Draw(*cube);
         window.Display();
 
     }
 
-    delete rectangle2;
+    delete cube;
+    delete circle;
     delete rectangle;
 
     return 0;
