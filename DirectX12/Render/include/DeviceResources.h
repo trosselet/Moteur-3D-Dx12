@@ -16,6 +16,7 @@ namespace Render
 		void Present(bool vsync);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentDSV() const;
 		ID3D12Resource* GetCurrentRenderTarget();
 		void ExecuteTheCommandList();
 
@@ -40,6 +41,7 @@ namespace Render
 		void CreateCommandList();
 		void CreateSwapChain(HWND hwnd, UINT width, UINT height);
 		void CreateRenderTargets();
+		void CreateDepthStencilResources(UINT width, UINT height);
 
 		void FlushQueue(UINT bufferCount);
 
@@ -55,6 +57,10 @@ namespace Render
 		UINT m_bufferCount;
 		UINT m_currentSwapChainBuffer;
 		UINT m_rtvHeapIncrement;
+
+		ID3D12DescriptorHeap* m_pDsvDescriptorHeap;
+		ID3D12Resource* m_pDepthStencil;
+
 
 		ID3D12Device* m_pDevice;
 		ID3D12CommandQueue* m_pCommandQueue;

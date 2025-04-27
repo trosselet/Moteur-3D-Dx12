@@ -14,7 +14,7 @@ int main()
     Engine::Event event;
 
     Render::RectangleShape* rectangle = new Render::RectangleShape();
-    Render::CircleShape* circle = new Render::CircleShape(Vector3f(-2.0f, 0.0f, 0.0f), 1.0f, Color::Red);
+    Render::CircleShape* circle = new Render::CircleShape(Vector3f(-1.5f, 0.0f, 0.0f), 1.0f, Color::Red);
     Render::CubeShape* cube = new Render::CubeShape(Vector3f(1.0f, 0.0f, 0.0f), 1.0f, Color::Green);
 
     float angle = 0;

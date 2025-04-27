@@ -61,6 +61,12 @@ void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, c
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs;
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = CreateInputLayoutDescFromElements(inputLayoutElements, inputElementDescs);
 
+    D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
+    depthStencilDesc.DepthEnable = TRUE;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+    depthStencilDesc.StencilEnable = FALSE;
+
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.pRootSignature = m_pRootSignature;
@@ -87,6 +93,9 @@ void Render::PipelineStateObjectManager::CreatePipelineState(const char* name, c
     psoDesc.BlendState.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
     psoDesc.BlendState.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
     psoDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+    psoDesc.DepthStencilState = depthStencilDesc;
+    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

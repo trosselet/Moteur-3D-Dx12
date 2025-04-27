@@ -84,9 +84,14 @@ namespace Render
 
 
 		const float color[4] = { clearColor.r, clearColor.g, clearColor.b, clearColor.a };
+
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_pDeviceResources->GetCurrentRTV();
-		m_pDeviceResources->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_pDeviceResources->GetCurrentDSV();
+
+		m_pDeviceResources->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+
 		m_pDeviceResources->GetCommandList()->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
+		m_pDeviceResources->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 		m_pDeviceResources->GetCommandList()->RSSetViewports(1, &m_viewport);
 		m_pDeviceResources->GetCommandList()->RSSetScissorRects(1, &m_rect);
