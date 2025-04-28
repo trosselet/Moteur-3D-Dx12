@@ -4,7 +4,7 @@
 #include "TShape.h"
 #include "PipelineStateObjectManager.h"
 #include "UploadBuffer.h"
-
+#include "AssetManager.h"
 
 
 namespace Render
@@ -50,6 +50,8 @@ namespace Render
 		m_pCam->SetPosition(DirectX::XMFLOAT3{ 0.0f, 0.0f, -5.0f });
 
 		mGlobalConstantBuffer = new UploadBuffer<GlobalInformation>(m_pDeviceResources->GetDevice(), 1, true);
+
+		AssetManager::Get()->Initialize(m_pDeviceResources);
 
 		m_isInitialize = true;
 

@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "UploadBuffer.h"
+#include "AssetManager.h"
 
 #include "../../Core/include/TDrawable.h"
 #include "../../Core/include/TTransformable.h"
@@ -37,6 +38,7 @@ namespace Render
 		{
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMFLOAT4 color;
+			DirectX::XMFLOAT2 texCorrd;
 		};
 
 		void UploadBuffers(Vertex* vertices, UINT vertexCount, UINT* indices, UINT indexCount);
@@ -60,6 +62,9 @@ namespace Render
 		Color m_color;
 
 		bool m_isInitialize;
+
+		ID3D12DescriptorHeap* m_pTextureHeap;
+		AssetManager* m_pAssetManager;
 
 	private:
 		friend class GraphicEngine;

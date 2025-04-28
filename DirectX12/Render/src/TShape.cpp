@@ -2,8 +2,9 @@
 #include "TShape.h"
 
 Render::Shape::Shape() : m_vbv(), m_ibv(), m_pIndexBuffer(nullptr), m_pVertexBuffer(nullptr), m_isInitialize(false), 
-m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr), m_pConstantBuffer(nullptr), m_color(Color::White)
+m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr), m_pConstantBuffer(nullptr), m_color(Color::White), m_pTextureHeap(nullptr)
 {
+	m_pAssetManager = AssetManager::Get();
 }
 
 Render::Shape::~Shape()
@@ -63,6 +64,11 @@ void Render::Shape::Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* comma
 	m_pConstantBuffer->CopyData(0, objConstants);
 
 	commandList->SetGraphicsRootConstantBufferView(1, m_pConstantBuffer->GetResource()->GetGPUVirtualAddress());
+
+	ID3D12DescriptorHeap* heaps[] = { m_pTextureHeap };
+	commandList->SetDescriptorHeaps(_countof(heaps), heaps);
+	commandList->SetGraphicsRootDescriptorTable(2, m_pTextureHeap->GetGPUDescriptorHandleForHeapStart());
+
 
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList->IASetVertexBuffers(0, 1, &m_vbv);
