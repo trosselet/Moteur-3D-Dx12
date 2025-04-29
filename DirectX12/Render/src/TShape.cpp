@@ -9,6 +9,7 @@ m_indexCount(0), m_vertexCount(0), m_pDevice(nullptr), m_pConstantBuffer(nullptr
 
 Render::Shape::~Shape()
 {
+
 	if (m_pVertexBuffer)
 	{
 		delete m_pVertexBuffer;
@@ -26,6 +27,7 @@ Render::Shape::~Shape()
 		delete m_pConstantBuffer;
 		m_pConstantBuffer = nullptr;
 	}
+
 
 	m_pDevice = nullptr;
 }

@@ -11,7 +11,7 @@ namespace Render
 	class CubeShape : public Shape
 	{
 	public:
-		CubeShape(Vector3f position = Vector3f{ 0.0f, 0.0f, 0.0f }, float32 size = 1.0f, Color color = Color::White, LPCWSTR texturePath = L"../Game/texture/wood.dds");
+		CubeShape(Vector3f position = Vector3f{ 0.0f, 0.0f, 0.0f }, float32 size = 1.0f, Color color = Color::White, LPCWSTR texturePath = L"../Game/texture/DefaultTex.dds");
 		~CubeShape();
 
 	private:

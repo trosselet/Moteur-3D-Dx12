@@ -11,7 +11,7 @@ namespace Render
 	class CircleShape : public Shape
 	{
 	public:
-		CircleShape(Vector3f position = Vector3f{ 0.0f, 0.0f, 0.0f }, float32 radius = 1, Color color = Color::White, LPCWSTR texturePath = L"../Game/texture/wood.dds");
+		CircleShape(Vector3f position = Vector3f{ 0.0f, 0.0f, 0.0f }, float32 radius = 1, Color color = Color::White, LPCWSTR texturePath = L"../Game/texture/DefaultTex.dds");
 		~CircleShape();
 
 	private:

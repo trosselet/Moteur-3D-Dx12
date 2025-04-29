@@ -10,7 +10,7 @@ namespace Render {
     class AssetManager
     {
     public:
-        AssetManager() = default;
+        AssetManager();
         ~AssetManager();
 
         void Initialize(DeviceResources* pDeviceResources);
@@ -27,6 +27,8 @@ namespace Render {
         std::map<std::wstring, ID3D12DescriptorHeap*> m_textures;
 
         std::map<std::wstring, ID3D12Resource*> m_loadedTextures;
+
+        ID3D12Resource* m_pTextureUploadHeap;
     };
 }
 

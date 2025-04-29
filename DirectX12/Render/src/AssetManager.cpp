@@ -3,6 +3,10 @@
 
 #include "DDSTextureLoader.h"
 
+Render::AssetManager::AssetManager() : m_pDeviceResources(nullptr), m_pTextureUploadHeap(nullptr)
+{
+}
+
 Render::AssetManager::~AssetManager()
 {
 	for (auto& tex : m_textures)
@@ -25,6 +29,12 @@ Render::AssetManager::~AssetManager()
 
 	m_textures.clear();
 	m_loadedTextures.clear();
+
+    if (m_pTextureUploadHeap)
+    {
+        m_pTextureUploadHeap->Release();
+        m_pTextureUploadHeap = nullptr;
+    }
 }
 
 void Render::AssetManager::Initialize(DeviceResources* pDeviceResources)
@@ -51,7 +61,13 @@ ID3D12DescriptorHeap* Render::AssetManager::GetTexture(LPCWSTR filepath)
 ID3D12DescriptorHeap* Render::AssetManager::LoadTexture(LPCWSTR filepath)
 {
     ID3D12Resource* texture = nullptr;
-    ID3D12Resource* textureUploadHeap = nullptr;
+
+    if (m_pTextureUploadHeap)
+    {
+        m_pTextureUploadHeap->Release();
+        m_pTextureUploadHeap = nullptr;
+    }
+
     ID3D12DescriptorHeap* srvHeap = nullptr;
 
     D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
@@ -73,7 +89,7 @@ ID3D12DescriptorHeap* Render::AssetManager::LoadTexture(LPCWSTR filepath)
         m_pDeviceResources->GetAllocator(),
         texturePath.c_str(),
         &texture,
-        &textureUploadHeap,
+        &m_pTextureUploadHeap,
         0,
         nullptr);
 
