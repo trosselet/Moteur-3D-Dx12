@@ -52,12 +52,12 @@ void Core::Transformable::Translate(Vector3f offset)
 
 void Core::Transformable::RotateX(float32 angle)
 {
-	m_transform.RotateYPR(DirectX::XMFLOAT3(angle, 0, 0));
+	m_transform.RotateYPR(DirectX::XMFLOAT3(0, angle, 0));
 }
 
 void Core::Transformable::RotateY(float32 angle)
 {
-	m_transform.RotateYPR(DirectX::XMFLOAT3(0, angle, 0));
+	m_transform.RotateYPR(DirectX::XMFLOAT3(angle, 0, 0));
 }
 
 void Core::Transformable::RotateZ(float32 angle)
