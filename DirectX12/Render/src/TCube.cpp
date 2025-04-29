@@ -21,16 +21,40 @@ void Render::CubeShape::BuildBuffers()
     std::vector<Vertex> vertices =
     {
         // FRONT
-        {{-half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
-        {{ half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
-        {{-half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
-        {{ half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{-half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{ half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{-half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{ half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
 
         // BACK
-        {{-half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}}, 
-        {{ half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}}, 
-        {{-half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}}, 
-        {{ half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}}, 
+        {{ half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{-half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{ half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{-half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
+
+        // LEFT
+        {{-half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{-half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{-half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{-half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
+
+        // RIGHT
+        {{ half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{ half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{ half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{ half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
+
+        // TOP
+        {{-half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{ half,  half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{-half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{ half,  half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
+
+        // BOTTOM
+        {{-half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 0.0f}},
+        {{ half, -half, -half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
+        {{-half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {0.0f, 1.0f}},
+        {{ half, -half, half}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 1.0f}},
     };
 
     std::vector<uint32> indices =
@@ -40,24 +64,24 @@ void Render::CubeShape::BuildBuffers()
         2, 1, 3,
 
         // BACK
-        5, 4, 7,
-        7, 4, 6,
+        4, 5, 6,
+        6, 5, 7,
 
         // LEFT
-        4, 0, 6,
-        6, 0, 2,
+        8, 9,10,
+        10, 9,11,
 
         // RIGHT
-        1, 5, 3,
-        3, 5, 7,
+        12,13,14,
+        14,13,15,
 
-        // UP
-        4, 5, 0,
-        0, 5, 1,
+        // TOP
+        16,17,18,
+        18,17,19,
 
-        // DOWN
-        2, 3, 6,
-        6, 3, 7,
+        // BOTTOM
+        20, 21, 22,
+        22, 21, 23,
     };
 
     UploadBuffers(vertices.data(), (UINT)vertices.size(), indices.data(), (UINT)indices.size());

@@ -67,8 +67,9 @@ int main()
         }
         
 
-        //rectangle->RotateZ(0.1f);
-        
+        rectangle->RotateZ(0.1f);
+        circle->RotateX(0.1f);
+        cube->RotateY(0.1f);
 
         window.Clear(Color::Black);
         window.Draw(*rectangle);
