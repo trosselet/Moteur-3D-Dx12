@@ -19,16 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\EngineTest.h" />
+    <ClInclude Include="include\Components\Component.h" />
+    <ClInclude Include="include\GameManager.h" />
+    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\Systems\RenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\Component.cpp" />
+    <ClCompile Include="src\GameManager.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Systems\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Render\Render.vcxproj">
       <Project>{d4501fca-3737-4b1b-a7da-61dcb33427ac}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Components\Component.inl" />
+    <None Include="include\GameManager.inl" />
+    <None Include="include\GameObject.inl" />
+    <None Include="include\Scene.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

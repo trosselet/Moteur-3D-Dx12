@@ -19,4 +19,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="shader\DefaultShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

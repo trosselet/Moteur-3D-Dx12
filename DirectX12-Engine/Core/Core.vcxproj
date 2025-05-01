@@ -19,11 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\CoreTest.h" />
+    <ClInclude Include="include\Color.h" />
+    <ClInclude Include="include\Define.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\Vector.hpp" />
+    <ClInclude Include="include\Vector2.hpp" />
+    <ClInclude Include="include\Vector3.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Vector.inl" />
+    <None Include="include\Vector2.inl" />
+    <None Include="include\Vector3.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

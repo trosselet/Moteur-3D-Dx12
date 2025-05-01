@@ -19,11 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AssetManager.h" />
+    <ClInclude Include="include\d3dx12.h" />
+    <ClInclude Include="include\DDSTextureLoader.h" />
+    <ClInclude Include="include\DebugMacro.h" />
+    <ClInclude Include="include\DeviceResources.h" />
+    <ClInclude Include="include\Geometry.h" />
+    <ClInclude Include="include\GraphicEngine.h" />
+    <ClInclude Include="include\Material.h" />
+    <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\pch.h" />
-    <ClInclude Include="include\RenderTest.h" />
+    <ClInclude Include="include\PipelineStateObjectManager.h" />
+    <ClInclude Include="include\PrimitiveFactory.h" />
+    <ClInclude Include="include\Render.h" />
+    <ClInclude Include="include\Texture.h" />
+    <ClInclude Include="include\UploadBuffer.h" />
+    <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\DDSTextureLoader.cpp" />
+    <ClCompile Include="src\DeviceResources.cpp" />
+    <ClCompile Include="src\GraphicEngine.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\PipelineStateObjectManager.cpp" />
+    <ClCompile Include="src\PrimitiveFactory.cpp" />
+    <ClCompile Include="src\Render.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\UploadBuffer.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Window.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
