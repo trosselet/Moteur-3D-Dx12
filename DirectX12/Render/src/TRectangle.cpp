@@ -24,7 +24,7 @@ void Render::RectangleShape::BuildBuffers()
 		{{ 0.5f, -0.5f, 0.0f}, {m_color.r, m_color.g, m_color.b, 1}, {1.0f, 0.0f}},
 	};
 
-	UINT indices[] =
+	uint32 indices[] =
 	{
 		0, 1, 2,
 		2, 1, 3

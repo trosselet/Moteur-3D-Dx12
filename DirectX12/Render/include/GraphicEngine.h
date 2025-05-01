@@ -4,7 +4,10 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 
+#include "PrimitiveFactory.h"
+
 #include "../../Core/include/TTransform.h"
+#include "../../Core/include/TColor.h"
 
 namespace Core
 {
@@ -16,8 +19,18 @@ struct GlobalInformation
 	DirectX::XMFLOAT4X4 ViewProj;
 };
 
+struct ObjectData
+{
+	DirectX::XMFLOAT4X4 world;
+};
+
+struct Geometry;
+class Mesh;
+
+
 namespace Render
 {
+	enum PrimitiveType : uint8;
 	class DeviceResources;
 	class PipelineStateObjectManager;
 	class Shape;
@@ -31,10 +44,13 @@ namespace Render
 		GraphicEngine();
 		~GraphicEngine();
 
+		
+
 		void Initialize(HWND hwnd, UINT width, UINT height, TRANSFORM* camera);
 		void Update();
-		void BeginFrame(Color clearColor);
+		void BeginFrame(Color clearColor = Color{0.0f, 0.0f, 0.0f, 1.0f});
 		void RenderFrame(Shape& shape, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
+		void RenderFrame(Mesh* pMesh, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
 		void EndFrame();
 
 		void ResizeWindow(UINT width, UINT height);
@@ -42,7 +58,9 @@ namespace Render
 
 		void SetViewport(UINT width, UINT height);
 
-		void ReportLiveD3D12Objects();
+		Geometry* CreatePrimitiveGeometry(PrimitiveType primitiveType, Color color = Color::White);
+		Mesh* CreateMesh(Geometry* pGeometry);
+
 
 	private:
 		DeviceResources* m_pDeviceResources;

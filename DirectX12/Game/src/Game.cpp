@@ -6,18 +6,18 @@
 #include "TRectangle.h"
 #include "TCircle.h"
 #include "TCube.h"
+#include "TSphere.h"
 
-int main()
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    Engine::TWindow window(Vector2i(800, 600), "Window");
+    Engine::TWindow window(hInstance, Vector2i(800, 600), "Window");
 
     Engine::Event event;
 
-    Render::RectangleShape* rectangle = new Render::RectangleShape();
-    Render::CircleShape* circle = new Render::CircleShape(Vector3f(-1.5f, 0.0f, 0.0f), 1.0f, Color::Red);
-    Render::CubeShape* cube = new Render::CubeShape(Vector3f(1.0f, 0.0f, 0.0f), 1.0f, Color::Red);
+    Render::CubeShape* baseCube = new Render::CubeShape(Vector3f(0.0f, -1.0f, 0.0f), 1.0f, Color::White, L"texture/grid_placeholder_material.dds");
+    baseCube->SetScale(Vector3f{ 1.5f, 0.5f, 1.5f });
 
-    float angle = 0;
+    Render::SphereShape* skyBox = new Render::SphereShape(Vector3f(0.0f, 0.0f, 0.0f), -490.0f, Color::White, L"texture/sky.dds");
 
     while (window.IsOpen())
     {
@@ -76,23 +76,16 @@ int main()
         {
             window.camera->RotateY(0.01f);
         }
-        
-
-        //rectangle->RotateZ(0.1f);
-        //circle->RotateY(0.1f);
-        //cube->RotateX(0.1f);
 
         window.Clear(Color::Black);
-        window.Draw(*rectangle);
-        window.Draw(*circle);
-        window.Draw(*cube);
+        window.Draw(*skyBox);
+        window.Draw(*baseCube);
         window.Display();
 
     }
 
-    delete cube;
-    delete circle;
-    delete rectangle;
+    delete skyBox;
+    delete baseCube;
 
     return 0;
 }

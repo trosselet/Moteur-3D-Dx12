@@ -12,6 +12,8 @@ namespace Core
 	class Transformable
 	{
 	public:
+		static Transformable const Identity;
+
 		Transformable();
 		~Transformable();
 

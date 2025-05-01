@@ -5,12 +5,14 @@
 #include "PipelineStateObjectManager.h"
 #include "UploadBuffer.h"
 #include "AssetManager.h"
-
+#include "Geometry.h"
+#include "Mesh.h"
 
 namespace Render
 {
 	GraphicEngine::GraphicEngine() : m_pDeviceResources(nullptr), m_pPsoManager(nullptr), m_rect(), m_viewport()
 	{
+		PrimitiveFactory::InitializePrimitiveGeometry();
 	}
 
 	GraphicEngine::~GraphicEngine()
@@ -29,8 +31,6 @@ namespace Render
 		{
 			delete m_pDeviceResources;
 		}
-
-		ReportLiveD3D12Objects();
 
 	}
 
@@ -120,6 +120,11 @@ namespace Render
 		}
 	}
 
+	void GraphicEngine::RenderFrame(Mesh* pMesh, const char* shaderPath)
+	{
+		
+	}
+
 	void GraphicEngine::EndFrame()
 	{
 		
@@ -166,17 +171,29 @@ namespace Render
 		m_rect.top = 0;
 		m_rect.bottom = m_viewport.Height;
 	}
-
-	void GraphicEngine::ReportLiveD3D12Objects()
+	
+	Geometry* GraphicEngine::CreatePrimitiveGeometry(PrimitiveType primitiveType, Color color)
 	{
-		IDXGIDebug1* debug = nullptr;
+		Geometry const* const pGeo = PrimitiveFactory::GetPrimitiveGeometry(primitiveType);
+		Geometry* pResult = new Geometry();
+		*pResult = *pGeo;
 
-		if (DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)) == S_OK)
+		for (int i = 0; i < pResult->indexes.size(); i++)
 		{
-			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-			debug->Release();
-			debug = nullptr;
+			pResult->colors.push_back(DirectX::XMFLOAT4(color.r, color.g, color.b, color.a));
 		}
 
+		return pResult;
+	}
+
+	Mesh* GraphicEngine::CreateMesh(Geometry* pGeometry)
+	{
+		m_pDeviceResources->ResetCommandList();
+		Mesh* mesh = new Mesh(pGeometry, m_pDeviceResources);
+		m_pDeviceResources->GetCommandList()->Close();
+		m_pDeviceResources->ExecuteTheCommandList();
+		m_pDeviceResources->FlushQueue(2);
+		mesh->ReleaseUploadBuffers();
+		return mesh;
 	}
 }

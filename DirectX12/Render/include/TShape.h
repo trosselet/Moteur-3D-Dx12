@@ -9,6 +9,8 @@
 #include "../../Core/include/TTransformable.h"
 #include "../../Core/include/TColor.h"
 
+struct Geometry;
+
 namespace Render
 {
 	class GraphicEngine;
@@ -25,7 +27,9 @@ namespace Render
 		Shape();
 		virtual ~Shape();
 
+
 	private:
+		void UploadGeometry();
 
 		void Draw(ID3D12Device* pDevice, ID3D12GraphicsCommandList* commandList) override;
 
@@ -65,6 +69,7 @@ namespace Render
 
 		ID3D12DescriptorHeap* m_pTextureHeap;
 		AssetManager* m_pAssetManager;
+
 
 	private:
 		friend class GraphicEngine;

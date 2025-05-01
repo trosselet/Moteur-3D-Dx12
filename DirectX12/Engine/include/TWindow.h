@@ -12,6 +12,9 @@
 #include "Utils.h"
 #include "TCamera.h"
 
+#include "Geometry.h"
+#include "Mesh.h"
+
 namespace Render
 {
 	class GraphicEngine;
@@ -27,7 +30,7 @@ namespace Engine
 		
 
 		TWindow();
-		TWindow(Vector2i windowSize, const int8* windowTitle = "Window", uint32 style = WindowStyle::Default);
+		TWindow(HINSTANCE hInstance, Vector2i windowSize, const int8* windowTitle = "Window", uint32 style = WindowStyle::Default);
 		~TWindow();
 
 		inline bool IsOpen() const { return m_isRunning; };
@@ -39,6 +42,7 @@ namespace Engine
 
 		void Clear(Color clearColor = Color(1.0f, 1.0f, 1.0f, 1.0f));
 		void Draw(Render::Shape& shape, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
+		void Draw(Mesh* pMesh, const char* shaderPath = "../Game/shader/DefaultShader.hlsl");
 		void Display();
 
 		Render::GraphicEngine* GetGraphicEngine() { return m_pGraphicEngine; };
@@ -58,6 +62,7 @@ namespace Engine
 		//Window param
 		bool m_isRunning;
 		HWND m_hwnd;
+		HINSTANCE m_hInstance;
 
 		//Graphics
 		Render::GraphicEngine* m_pGraphicEngine;

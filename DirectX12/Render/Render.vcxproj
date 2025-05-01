@@ -25,29 +25,38 @@
     <ClInclude Include="include\DebugMacro.h" />
     <ClInclude Include="include\DeviceResources.h" />
     <ClInclude Include="include\framework.h" />
+    <ClInclude Include="include\Geometry.h" />
+    <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\GraphicEngine.h" />
     <ClInclude Include="include\PipelineStateObjectManager.h" />
+    <ClInclude Include="include\PrimitiveFactory.h" />
+    <ClInclude Include="include\Render.h" />
     <ClInclude Include="include\TCircle.h" />
     <ClInclude Include="include\TCube.h" />
     <ClInclude Include="include\TRectangle.h" />
     <ClInclude Include="include\TShape.h" />
+    <ClInclude Include="include\TSphere.h" />
     <ClInclude Include="include\UploadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\DDSTextureLoader.cpp" />
     <ClCompile Include="src\DeviceResources.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\GraphicEngine.cpp" />
     <ClCompile Include="src\PipelineStateObjectManager.cpp" />
+    <ClCompile Include="src\PrimitiveFactory.cpp" />
+    <ClCompile Include="src\Render.cpp" />
     <ClCompile Include="src\TCircle.cpp" />
     <ClCompile Include="src\TCube.cpp" />
     <ClCompile Include="src\TRectangle.cpp" />
     <ClCompile Include="src\TShape.cpp" />
+    <ClCompile Include="src\TSphere.cpp" />
     <ClCompile Include="src\UploadBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>

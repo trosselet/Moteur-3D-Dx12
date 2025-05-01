@@ -33,6 +33,7 @@ namespace Render
 		void WaitForSynchronisation();
 
 		void DebugSetName();
+		void FlushQueue(UINT bufferCount);
 
 	private:
 		void ReleaseResources();
@@ -43,7 +44,6 @@ namespace Render
 		void CreateRenderTargets();
 		void CreateDepthStencilResources(UINT width, UINT height);
 
-		void FlushQueue(UINT bufferCount);
 
 	private:
 

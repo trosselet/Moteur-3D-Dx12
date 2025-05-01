@@ -9,11 +9,12 @@ Engine::TWindow::TWindow() : m_windowSize(0, 0), m_windowTitle(""), m_windowStyl
 {
 }
 
-Engine::TWindow::TWindow(Vector2i windowSize, const int8* windowTitle, uint32 style)
+Engine::TWindow::TWindow(HINSTANCE hInstance, Vector2i windowSize, const int8* windowTitle, uint32 style)
 {
     m_windowSize = windowSize;
     m_windowTitle = windowTitle;
     m_windowStyle = style;
+    m_hInstance = hInstance;
     m_pGraphicEngine = new Render::GraphicEngine();
     Initialize();
 }
@@ -82,7 +83,7 @@ bool Engine::TWindow::Initialize()
     wc.lpfnWndProc = &WndProc;
     wc.cbClsExtra = NULL;
     wc.cbWndExtra = NULL;
-    wc.hInstance = NULL;
+    wc.hInstance = m_hInstance;
     wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
@@ -92,7 +93,7 @@ bool Engine::TWindow::Initialize()
     if (!RegisterClass(&wc))
         return false;
 
-    m_hwnd = CreateWindow(L"MyWindowClass", Utils::GetWchar(m_windowTitle) , WS_OVERLAPPEDWINDOW, 0, 0, m_windowSize.x, m_windowSize.y, 0, 0, 0, this);
+    m_hwnd = CreateWindow(L"MyWindowClass", Utils::GetWchar(m_windowTitle) , WS_OVERLAPPEDWINDOW, 0, 0, m_windowSize.x, m_windowSize.y, 0, 0, m_hInstance, this);
 
     if (!m_hwnd)
         return false;
@@ -124,6 +125,11 @@ void Engine::TWindow::Clear(Color clearColor)
 void Engine::TWindow::Draw(Render::Shape& shape, const char* shaderPath)
 {
     m_pGraphicEngine->RenderFrame(shape, shaderPath);
+}
+
+void Engine::TWindow::Draw(Mesh* pMesh, const char* shaderPath)
+{
+
 }
 
 void Engine::TWindow::Display()
@@ -171,6 +177,6 @@ void Engine::TWindow::Close()
     {
         DestroyWindow(m_hwnd);
 
-        std::cout << "Windows closed by user\n";
+        PRINT_CONSOLE_OUTPUT("Windows closed by user\n");
     }
 }

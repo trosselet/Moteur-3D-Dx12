@@ -24,7 +24,7 @@ namespace Render
     public:
 
         inline UploadBuffer(ID3D12Device* pDevice, UINT elementCount, bool isConstantBuffer)
-            : m_pUploadBuffer(nullptr), m_pMappedData(nullptr), m_elementCount(elementCount), m_isConstantBuffer(isConstantBuffer)
+            : m_pUploadBuffer(nullptr), m_pMappedData(nullptr), m_elementCount(elementCount)
         {
             m_elementByteSize = sizeof(T);
             if (isConstantBuffer)
@@ -82,7 +82,6 @@ namespace Render
         BYTE* m_pMappedData;
         UINT m_elementByteSize;
         UINT m_elementCount;
-        bool m_isConstantBuffer;
     };
 
 
