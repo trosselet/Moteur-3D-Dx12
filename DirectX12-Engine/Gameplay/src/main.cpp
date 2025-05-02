@@ -33,7 +33,7 @@ int main()
 	GameObject* const pTest = new GameObject(scene);
 	pTest->m_pTransform->SetPosition({ 0.0f, 0.0f, 10.0f });
 	MeshRenderer& meshRendererTest = pTest->AddComponent<MeshRenderer>();
-	meshRendererTest.SetRectangle("../Gameplay/texture/grid_placeholder_material.dds");
+	meshRendererTest.SetCircle("../Gameplay/texture/grid_placeholder_material.dds");
 
 
 

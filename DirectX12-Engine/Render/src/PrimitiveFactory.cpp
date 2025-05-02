@@ -85,7 +85,7 @@ void PrimitiveFactory::InitializePrimitiveGeometry()
         circle.indexes.push_back(next);
         circle.indexes.push_back(current);
     }
-    circle.indiciesNumber = (uint32)sphere.indexes.size();
+    circle.indiciesNumber = (uint32)circle.indexes.size();
     pInstance->m_geometries.push_back(circle);
 
     cube.positions = {
