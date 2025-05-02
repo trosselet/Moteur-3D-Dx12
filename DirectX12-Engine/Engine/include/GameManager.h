@@ -2,17 +2,11 @@
 #define GAMEMANAGER__H
 
 #include <vector>
-
+#include <Windows.h>
 #include "Define.h"
-
 #include "Scene.h"
-
-struct HINSTANCE__;
-using HINSTANCE = HINSTANCE__*;
-
-class Window;
-
-namespace Engine { class RenderSystem; }
+#include "Systems/RenderSystem.h"
+#include "Window.h"
 
 namespace Engine
 {
@@ -37,33 +31,27 @@ namespace Engine
 		~GameManager();
 
 		void GameLoop();
-
 		void HandleCreations();
 		void HandleDeletions();
 
 	private:
-
 		Window* m_pWindow = nullptr;
-
 		RenderSystem* m_pRenderSystem = nullptr;
 
 		std::vector<Scene>  m_scenes;
 		std::vector<Scene*> m_loadedScenes;
-		Scene*				m_pActiveScene		= nullptr;
-		Scene*				m_pNextActiveScene	= nullptr;
-
+		Scene* m_pActiveScene = nullptr;
+		Scene* m_pNextActiveScene = nullptr;
 		std::vector<Scene*> m_scenesToLoad;
 
-		float32 m_fixedDeltaTime	= 0.016f;
-		float32 m_elapsedTime		= 0.0f;
+		float32 m_fixedDeltaTime = 0.016f;
+		float32 m_elapsedTime = 0.0f;
 
 		friend class GameObject;
 		friend class Scene;
-
 	};
 }
-
 #include "GameManager.inl"
 
-
 #endif // !GAMEMANAGER__H
+

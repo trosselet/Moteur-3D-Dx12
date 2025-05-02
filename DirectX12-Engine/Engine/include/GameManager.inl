@@ -1,7 +1,6 @@
 #ifndef GAMEMANAGER__INL
 #define GAMEMANAGER__INL
 
-#include "GameManager.h"
 namespace Engine
 {
 	inline void GameManager::Init(HINSTANCE const hInstance) 

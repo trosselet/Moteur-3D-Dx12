@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "GameManager.h"
-#include "Window.h"
 
 #include "GraphicEngine.h"
-#include "Systems/RenderSystem.h"
 
 namespace Engine
 {
@@ -35,6 +33,7 @@ namespace Engine
 			{
 				m_elapsedTime -= m_fixedDeltaTime;
 			}
+
 
 			m_pRenderSystem->HandleRendering();
 

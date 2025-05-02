@@ -8,37 +8,28 @@
 
 #include "GameManager.h"
 
-
-using Engine::Camera;
-using Engine::MeshRenderer;
-
-using Engine::GameObject;
-using Engine::Scene;
-
-using Engine::GameManager;
-
 int main()
 {
-	GameManager::Init(nullptr);
+	Engine::GameManager::Init(nullptr);
 
-	Scene& scene = Scene::Create();
+	Engine::Scene& scene = Engine::Scene::Create();
 
 	scene.Load();
 	scene.SetActive();
 
-	GameObject* const pMainCamera = new GameObject(scene);
+	Engine::GameObject* const pMainCamera = new Engine::GameObject(scene);
 	pMainCamera->m_pTransform->SetPosition({ 0.0f, 0.0f, 0.0f });
-	Camera& cameraComponent = pMainCamera->AddComponent<Camera>();
+	Engine::Camera& cameraComponent = pMainCamera->AddComponent<Engine::Camera>();
 
-	GameObject* const pTest = new GameObject(scene);
+	Engine::GameObject* const pTest = new Engine::GameObject(scene);
 	pTest->m_pTransform->SetPosition({ 0.0f, 0.0f, 10.0f });
-	MeshRenderer& meshRendererTest = pTest->AddComponent<MeshRenderer>();
+	Engine::MeshRenderer& meshRendererTest = pTest->AddComponent<Engine::MeshRenderer>();
 	meshRendererTest.SetCircle("../Gameplay/texture/grid_placeholder_material.dds");
 
 
 
-	GameManager::Run();
-	GameManager::Release();
+	Engine::GameManager::Run();
+	Engine::GameManager::Release();
 
 	return 0;
 }

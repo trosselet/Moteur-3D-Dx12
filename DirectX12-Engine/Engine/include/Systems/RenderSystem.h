@@ -23,8 +23,8 @@ namespace Engine
 
 		void HandleRendering();
 
-		GraphicEngine* m_pGraphics;
-		Render* m_pRender;
+		GraphicEngine* m_pGraphics = nullptr;
+		Render* m_pRender = nullptr;
 
 		std::array<std::vector<MeshRenderer const*>, 16> m_meshRenderers{};
 
