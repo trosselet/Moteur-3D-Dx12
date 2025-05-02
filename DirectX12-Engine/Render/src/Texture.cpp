@@ -17,13 +17,11 @@ Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
 
     hr = DirectX::CreateDDSTextureFromFile12(pGraphic->GetRender()->GetDeviceResources()->GetDevice(),
          pGraphic->GetRender()->GetDeviceResources()->GetCommandList(),
-         pGraphic->GetRender()->GetDeviceResources()->GetCommandQueue(),
-         pGraphic->GetRender()->GetDeviceResources()->GetAllocator(),
          wFilePath.c_str(),
          &m_pTexture,
          &m_pTextureUploadHeap,
-         0,
-         nullptr);
+         m_width,
+         m_height);
 
     if (hr != S_OK)
     {

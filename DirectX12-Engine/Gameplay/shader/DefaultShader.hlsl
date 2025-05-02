@@ -17,7 +17,8 @@ struct VertexOut
 
 cbuffer cbPass : register(b0)
 {
-    float4x4 gViewProj;
+    float4x4 gView;
+    float4x4 gProj;
 };
 
 cbuffer cbPerObject : register(b1)
@@ -29,7 +30,8 @@ VertexOut vsmain(VertexIn vin)
 {
     VertexOut vout;
     float4 posW = mul(float4(vin.position, 1.0f), gWorld);
-    vout.position = mul(posW, gViewProj);
+    vout.position = mul(posW, gView);
+    vout.position = mul(posW, gProj);
     vout.color = vin.color;
     vout.texcoord = vin.texcoord;
     return vout;

@@ -114,6 +114,7 @@ void PipelineStateObjectManager::CreatePipelineState(const char* name, const std
     m_pRootSignature->AddRef();
     psoConfig->rootSignature = m_pRootSignature;
     psoConfig->pipelineState = pso;
+    psoConfig->shaderPath = shaderPath.c_str();
 
     m_pipelineStates[name] = psoConfig;
 

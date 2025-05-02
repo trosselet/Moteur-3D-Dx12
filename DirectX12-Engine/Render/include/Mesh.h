@@ -23,7 +23,7 @@ public:
 
 private:
     void UploadGeometry();
-    void UploadBuffers(float32* vertices, UINT vertexCount, uint32* indices, UINT indexCount);
+    void UploadBuffers(float32* vertices, UINT vertexCount, uint32* indices, UINT indexCount, UINT floatStride);
 
 private:
     Render* m_pRender = nullptr;
@@ -32,8 +32,11 @@ private:
     UINT m_vertexCount;
     UINT m_indexCount;
 
-    UploadBuffer<float32>* m_pVertexBufferUploader;
-    UploadBuffer<uint32>* m_pIndexBufferUploader;
+    ID3D12Resource* m_pVertexBufferUploader;
+    ID3D12Resource* m_pIndexBufferUploader;
+
+    ID3D12Resource* m_pVertexBufferGPU;
+    ID3D12Resource* m_pIndexBufferGPU;
 
     D3D12_VERTEX_BUFFER_VIEW* m_pVertexBuffer;
     D3D12_INDEX_BUFFER_VIEW* m_pIndexBuffer;

@@ -5,7 +5,7 @@
 #include "Render.h"
 #include "PipelineStateObjectManager.h"
 
-Material::Material(PipelineStateObjectManager* pShader, Render* pRender) :
+Material::Material(PipelineStateObjectManager::PipelineStateConfig* pShader, Render* pRender) :
     m_pShader(pShader),
     m_pRender(pRender),
     m_uploadBuffer(pRender->GetDeviceResources()->GetDevice(), 1, 1),
@@ -32,7 +32,7 @@ Texture* Material::GetTexture()
     return m_pTexture;
 }
 
-PipelineStateObjectManager* Material::GetShader()
+PipelineStateObjectManager::PipelineStateConfig* Material::GetShader()
 {
     return m_pShader;
 }

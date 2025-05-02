@@ -131,6 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{b741d15a-aecf-4498-ac00-8beb7c2145af}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{2b7d9678-ab71-4af3-8005-f63c3417840a}</Project>
     </ProjectReference>

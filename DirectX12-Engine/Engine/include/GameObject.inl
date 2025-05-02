@@ -40,6 +40,18 @@ namespace Engine
 	inline std::vector<GameObject*>& GameObject::GetChildren() { return m_pChildren; }
 
 	inline void GameObject::SetName(int8 const* name) { m_name = name; }
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 #endif // !GAMEOBJECT__INL

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\d3dx12.h" />
     <ClInclude Include="include\DDSTextureLoader.h" />
     <ClInclude Include="include\DebugMacro.h" />
@@ -37,7 +36,6 @@
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\DDSTextureLoader.cpp" />
     <ClCompile Include="src\DeviceResources.cpp" />
     <ClCompile Include="src\GraphicEngine.cpp" />

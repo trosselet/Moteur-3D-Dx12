@@ -11,7 +11,8 @@
 Render::Render(Window* const pWindow, uint32 const renderWidth, uint32 const renderHeight) :
 	m_pWindow(pWindow), 
 	m_renderWidth(renderWidth),
-	m_renderHeight(renderHeight)
+	m_renderHeight(renderHeight),
+	m_pCbCurrentViewProjInstance(nullptr)
 	
 {
 	m_pDeviceResources = new DeviceResources();
@@ -22,6 +23,8 @@ Render::Render(Window* const pWindow, uint32 const renderWidth, uint32 const ren
 	m_pPSOManager->CreatePipelineState("../Gameplay/shader/DefaultShader.hlsl", L"../Gameplay/shader/DefaultShader.hlsl");
 
 	m_pDeviceResources->Resize(renderWidth, renderHeight);
+
+	m_pCbCurrentViewProjInstance = new UploadBuffer<CameraCB>(m_pDeviceResources->GetDevice(), 1, 1);
 
 }
 
@@ -36,6 +39,9 @@ DeviceResources* Render::GetDeviceResources()
 
 bool Render::Clear()
 {
+	if (!m_pDeviceResources->ResetCommandList())
+		return false;
+
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -73,22 +79,23 @@ bool Render::DrawObject(Mesh* pMesh, Material* pMaterial, DirectX::XMFLOAT4X4 co
 	assert(pMaterial != nullptr);
 	assert(pMesh != nullptr);
 
-	PipelineStateObjectManager* pShader = pMaterial->GetShader();
+	PipelineStateObjectManager::PipelineStateConfig* pShader = pMaterial->GetShader();
 	assert(pShader != nullptr);
 
 	pMaterial->UpdateWorldConstantBuffer(DirectX::XMLoadFloat4x4(&objworldMatrix));
 
-	m_pDeviceResources->GetCommandList()->SetPipelineState(pShader->Get("../Gameplay/shader/DefaultShader.hlsl")->pipelineState);
-	m_pDeviceResources->GetCommandList()->SetGraphicsRootSignature(pShader->Get("../Gameplay/shader/DefaultShader.hlsl")->rootSignature);
+	m_pDeviceResources->GetCommandList()->SetPipelineState(pShader->pipelineState);
+	m_pDeviceResources->GetCommandList()->SetGraphicsRootSignature(pShader->rootSignature);
 
 	m_pDeviceResources->GetCommandList()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	D3D12_VERTEX_BUFFER_VIEW pVbv = pMesh->GetVertexBuffer();
-	D3D12_INDEX_BUFFER_VIEW pIbv = pMesh->GetIndexBuffer();
 
+	D3D12_VERTEX_BUFFER_VIEW pVbv = pMesh->GetVertexBuffer();
 	m_pDeviceResources->GetCommandList()->IASetVertexBuffers(0, 1, &pVbv);
+
+	D3D12_INDEX_BUFFER_VIEW pIbv = pMesh->GetIndexBuffer();
 	m_pDeviceResources->GetCommandList()->IASetIndexBuffer(&pIbv);
 
-	pMaterial->UpdateTexture(pShader->GetShaderPosition());
+	pMaterial->UpdateTexture(m_pPSOManager->GetShaderPosition());
 
 	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(0, m_pCbCurrentViewProjInstance->GetResource()->GetGPUVirtualAddress());
 	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(1, pMaterial->GetUploadBuffer()->GetResource()->GetGPUVirtualAddress());
@@ -118,8 +125,6 @@ bool Render::Display()
 	m_pDeviceResources->Present(false);
 
 	m_pDeviceResources->WaitForSynchronisation();
-
-	m_pDeviceResources->ResetCommandList();
 
 	return true;
 }

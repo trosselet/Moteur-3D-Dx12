@@ -3,15 +3,15 @@
 
 #include "Components/Component.h"
 
-#include "Scene.h"
-#include "GameManager.h"
+
 
 
 namespace Engine
 {
 
 	GameObject::GameObject(Scene& scene) :
-		m_pScene(&scene)
+		m_pScene(&scene),
+        m_pTransform(new TRANSFORM())
 	{
 
         if (m_pScene->m_gameObjectsIDs.empty())
@@ -53,5 +53,4 @@ namespace Engine
 
         return m_active && m_pScene->IsActive();
     }
-
 }

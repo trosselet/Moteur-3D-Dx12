@@ -5,21 +5,22 @@
 
 #include "Define.h"
 
+#include "PipelineStateObjectManager.h"
+
 class Texture;
 class Render;
-class PipelineStateObjectManager;
 
 class Material
 {
 public:
-	Material(PipelineStateObjectManager* pShader, Render* pRender);
+	Material(PipelineStateObjectManager::PipelineStateConfig* pShader, Render* pRender);
 	~Material() = default;
 
 	void SetTexture(Texture* pTexture);
 	bool UpdateTexture(int16 position);
 	
 	Texture* GetTexture();
-	PipelineStateObjectManager* GetShader();
+	PipelineStateObjectManager::PipelineStateConfig* GetShader();
 
 	UploadBuffer<ObjectData>* GetUploadBuffer();
 
@@ -27,7 +28,7 @@ public:
 
 private:
 	Texture* m_pTexture;
-	PipelineStateObjectManager* m_pShader;
+	PipelineStateObjectManager::PipelineStateConfig* m_pShader;
 
 	Render* m_pRender = nullptr;
 

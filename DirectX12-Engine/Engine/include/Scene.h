@@ -1,7 +1,15 @@
 #ifndef SCENE__H
 #define SCENE__H
 
-#include "../../Core/include/Define.h"
+#include <vector>
+
+#include "Define.h"
+
+#include "Components/Camera.h"
+#include "Components/MeshRenderer.h"
+
+
+
 
 namespace Engine { class GameObject; }
 
@@ -25,7 +33,13 @@ namespace Engine
 		GameObject* GetMainCamera();
 
 		std::vector<GameObject*> const& GetGameObjects() const;
+		std::vector<MeshRenderer*> const& GetMeshRenderers() const;
+		std::vector<Camera*> const& GetCameras() const;
+
+
 		std::vector<GameObject*>& GetGameObjects();
+		std::vector<MeshRenderer*>& GetMeshRenderers();
+		std::vector<Camera*>& GetCameras();
 
 		void HandleCreation();
 		void HandleDestruction();
@@ -41,13 +55,19 @@ namespace Engine
 
 		std::vector<GameObject*> m_gameObjects;
 		std::vector<uint32> m_gameObjectsIDs;
+		std::vector<MeshRenderer*> m_meshRenderers;
+		std::vector<Camera*> m_cameras;
+
 
 		std::vector<GameObject*> m_gameObjectsToCreate;
+		std::vector<MeshRenderer*> m_meshRenderersToCreate;
+		std::vector<Camera*> m_camerasToCreate;
 
 		std::vector<GameObject*> m_gameObjectsToDelete;
 
 
-
+		friend struct Camera;
+		friend struct MeshRenderer;
 		friend class GameObject;
 		friend class GameManager;
 	};

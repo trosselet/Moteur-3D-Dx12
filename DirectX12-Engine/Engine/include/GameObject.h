@@ -5,11 +5,16 @@
 #include "Define.h"
 #include "Transform.h"
 
-namespace Engine
-{
-	struct Component;
-	class Scene;
-}
+#include "Components/Camera.h"
+#include "Components/MeshRenderer.h"
+
+
+#include "GameObject.h"
+
+#include "Scene.h"
+
+#include "GameManager.h"
+#include "Window.h"
 
 namespace Engine
 {
@@ -44,7 +49,7 @@ namespace Engine
 
 		void SetName(int8 const* name);
 
-		//TRANSFORM transform;
+		TRANSFORM* m_pTransform;
 
 	private:
 		bool m_created = false;
@@ -69,6 +74,52 @@ namespace Engine
 
 	};
 
+	template <>
+	inline MeshRenderer& GameObject::AddComponent<MeshRenderer>()
+	{
+		assert((HasComponent<MeshRenderer>() == false));
+
+		MeshRenderer* const pMeshRenderer = new MeshRenderer();
+		m_pScene->m_meshRenderers.push_back(pMeshRenderer);
+		pMeshRenderer->m_pOwner = this;
+		m_pScene->m_meshRenderersToCreate.push_back(pMeshRenderer);
+
+		m_components[MeshRenderer::Tag] = pMeshRenderer;
+		m_componentBitmask |= 1 << (MeshRenderer::Tag - 1);
+
+		return *pMeshRenderer;
+	}
+
+	template <>
+	inline Camera& GameObject::AddComponent<Camera>()
+	{
+		assert((HasComponent<Camera>() == false));
+
+		Camera* const pCamera = new Camera();
+		m_pScene->m_cameras.push_back(pCamera);
+		pCamera->m_pOwner = this;
+		m_pScene->m_camerasToCreate.push_back(pCamera);
+		if (m_pScene->m_pMainCamera == nullptr) m_pScene->m_pMainCamera = pCamera->m_pOwner;
+
+		m_components[Camera::Tag] = pCamera;
+		m_componentBitmask |= 1 << (Camera::Tag - 1);
+
+		return *pCamera;
+	}
+
+	template <>
+	inline void GameObject::RemoveComponent<MeshRenderer>()
+	{
+		assert(HasComponent<MeshRenderer>());
+		m_components[MeshRenderer::Tag]->Destroy();
+	}
+
+	template <>
+	inline void GameObject::RemoveComponent<Camera>()
+	{
+		assert(HasComponent<Camera>());
+		m_components[Camera::Tag]->Destroy();
+	}
 	
 }
 

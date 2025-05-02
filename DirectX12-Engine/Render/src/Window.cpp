@@ -38,6 +38,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         {
             int width = LOWORD(lparam);
             int height = HIWORD(lparam);
+
+            if (width < 8)
+            {
+                width = 8;
+            }
+            if (height < 8)
+            {
+                height = 8;
+            }
+
             pointer->GetGraphics()->ResizeWindow(width, height);
         }
         break;

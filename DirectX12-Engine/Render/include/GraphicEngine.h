@@ -6,12 +6,13 @@
 #include "Transform.h"
 #include "Color.h"
 #include "Render.h"
-
+#include "PipelineStateObjectManager.h"
 
 
 class Window;
 struct Geometry;
 class Mesh;
+class Texture;
 class Material;
 enum PrimitiveType : uint8;
 
@@ -28,11 +29,12 @@ public:
 
 	bool IsInit() { return m_isInit; };
 
-	//
 	void ResizeWindow(UINT width, UINT height);
 
 	Geometry* CreatePrimitiveGeometry(PrimitiveType primitiveType, Color color = Color::White);
 	Mesh* CreateMesh(Geometry* pGeometry);
+	Texture* CreateTexture(char const* filePath);
+	Material* CreateMaterial(PipelineStateObjectManager::PipelineStateConfig* pShader);
 
 	void UpdateCameraAt(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix);
 	void UpdateCameraTo(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix);

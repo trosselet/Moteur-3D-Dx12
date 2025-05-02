@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "GraphicEngine.h"
+#include "DeviceResources.h"
 #include "Window.h"
 #include "PrimitiveFactory.h"
 #include "UploadBuffer.h"
-#include "AssetManager.h"
 #include "Geometry.h"
 #include "Mesh.h"
+#include "Texture.h"
 #include "Material.h"
 
 GraphicEngine::GraphicEngine(Window* pWindow) :
@@ -63,6 +64,22 @@ Mesh* GraphicEngine::CreateMesh(Geometry* pGeometry)
 	m_render.GetDeviceResources()->FlushQueue(2);
 	mesh->ReleaseUploadBuffers();
 	return mesh;
+}
+
+Texture* GraphicEngine::CreateTexture(char const* filePath)
+{
+	m_render.GetDeviceResources()->ResetCommandList();
+	Texture* pTexture = new Texture(filePath, this);
+	m_render.GetDeviceResources()->GetCommandList()->Close();
+	m_render.GetDeviceResources()->ExecuteTheCommandList();
+	m_render.GetDeviceResources()->FlushQueue(2);
+	return pTexture;
+}
+
+Material* GraphicEngine::CreateMaterial(PipelineStateObjectManager::PipelineStateConfig* pShader)
+{
+	Material* pMat = new Material(pShader, &m_render);
+	return pMat;
 }
 
 void GraphicEngine::UpdateCameraAt(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix)

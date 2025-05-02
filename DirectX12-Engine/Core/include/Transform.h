@@ -36,7 +36,7 @@ public:
 
     const DirectX::XMFLOAT3& GetPositionFLOAT() const;
     DirectX::XMVECTOR GetPosition();
-    void SetPosition(const DirectX::XMFLOAT3& _vec);
+    void SetPosition(DirectX::XMFLOAT3& _vec);
     void XM_CALLCONV SetPosition(DirectX::FXMVECTOR _vec);
     void OffsetPosition(const DirectX::XMFLOAT3& _vec);
 

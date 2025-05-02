@@ -1,6 +1,6 @@
-#include "Scene.h"
 #ifndef SCENE__INL
 #define SCENE__INL
+#include "Scene.h"
 
 namespace Engine
 {	
@@ -13,7 +13,13 @@ namespace Engine
 
 
 	inline std::vector<GameObject*> const& Scene::GetGameObjects() const { return m_gameObjects; }
+	inline std::vector<MeshRenderer*> const& Scene::GetMeshRenderers() const { return m_meshRenderers; }
+	inline std::vector<Camera*> const& Scene::GetCameras() const { return m_cameras; }
+
+
 	inline std::vector<GameObject*>& Scene::GetGameObjects() { return m_gameObjects; }
+	inline std::vector<MeshRenderer*>& Scene::GetMeshRenderers() { return m_meshRenderers; }
+	inline std::vector<Camera*>& Scene::GetCameras() { return m_cameras; }
 }
 
 

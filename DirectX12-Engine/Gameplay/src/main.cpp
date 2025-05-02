@@ -1,11 +1,21 @@
-#include "GameManager.h"
+
+
+#include "Components/Camera.h"
+#include "Components/MeshRenderer.h"
+
 #include "GameObject.h"
 #include "Scene.h"
-#include "Color.h"
 
-using Engine::GameManager;
+#include "GameManager.h"
+
+
+using Engine::Camera;
+using Engine::MeshRenderer;
+
 using Engine::GameObject;
 using Engine::Scene;
+
+using Engine::GameManager;
 
 int main()
 {
@@ -15,6 +25,17 @@ int main()
 
 	scene.Load();
 	scene.SetActive();
+
+	GameObject* const pMainCamera = new GameObject(scene);
+	pMainCamera->m_pTransform->SetPosition({ 0.0f, 0.0f, 0.0f });
+	Camera& cameraComponent = pMainCamera->AddComponent<Camera>();
+
+	GameObject* const pTest = new GameObject(scene);
+	pTest->m_pTransform->SetPosition({ 0.0f, 0.0f, 10.0f });
+	MeshRenderer& meshRendererTest = pTest->AddComponent<MeshRenderer>();
+	meshRendererTest.SetRectangle("../Gameplay/texture/grid_placeholder_material.dds");
+
+
 
 	GameManager::Run();
 	GameManager::Release();

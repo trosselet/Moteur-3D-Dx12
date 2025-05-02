@@ -5,10 +5,12 @@
 #include <vector>
 
 #include "Define.h"
+#include "PipelineStateObjectManager.h"
 
 class Render;
 class GraphicEngine;
 
+namespace Engine { struct MeshRenderer; };
 
 namespace Engine
 {
@@ -23,6 +25,10 @@ namespace Engine
 
 		GraphicEngine* m_pGraphics;
 		Render* m_pRender;
+
+		std::array<std::vector<MeshRenderer const*>, 16> m_meshRenderers{};
+
+		PipelineStateObjectManager::PipelineStateConfig* GetShader(int8 const* path);
 
 	private:
 

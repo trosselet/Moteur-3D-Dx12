@@ -23,7 +23,7 @@ public:
 	ID3D12Fence* GetD3D12Fence() { return m_pFence; };
 	UINT64 GetD3D12CurrentFenceValue() { return m_currentFenceValue; };
 
-	void ResetCommandList();
+	bool ResetCommandList();
 
 	ID3D12Device* GetDevice() const { return m_pDevice; }
 	ID3D12CommandAllocator* GetAllocator() const { return m_pCommandAllocator; }
@@ -40,6 +40,8 @@ public:
 
 	void UpdateViewport();
 
+	ID3D12Resource* CreateDefaultBuffer(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, const void* initData, UINT64 byteSize, ID3D12Resource*& uploadBuffer, D3D12_RESOURCE_STATES finalState);
+
 private:
 	void ReleaseResources();
 	void CreateDevice();
@@ -54,7 +56,7 @@ private:
 
 	IDXGIFactory2* m_pFactory;
 	IDXGIAdapter* m_pAdapter;
-	IDXGISwapChain1* m_pSwapChain;
+	IDXGISwapChain3* m_pSwapChain;
 
 	ID3D12Resource* m_pRenderTargets[FrameCount];
 	ID3D12DescriptorHeap* m_pRtvDescriptorHeap;

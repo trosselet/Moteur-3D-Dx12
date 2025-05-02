@@ -40,7 +40,7 @@ void DeviceResources::Present(bool vsync)
 {
     m_pSwapChain->Present(vsync, 0);
 
-    m_currentSwapChainBuffer = (m_currentSwapChainBuffer + 1) % FrameCount;
+    m_currentSwapChainBuffer = m_pSwapChain->GetCurrentBackBufferIndex();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DeviceResources::GetCurrentRTV() const
@@ -72,10 +72,12 @@ void DeviceResources::ExecuteTheCommandList()
 
 }
 
-void DeviceResources::ResetCommandList()
+bool DeviceResources::ResetCommandList()
 {
     m_pCommandAllocator->Reset();
     GetCommandList()->Reset(m_pCommandAllocator, 0);
+
+    return true;
 }
 
 void DeviceResources::Resize(UINT width, UINT height)
@@ -382,24 +384,24 @@ void DeviceResources::CreateSwapChain(HWND hwnd, UINT width, UINT height)
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    heapDesc.NumDescriptors = 2;
+    heapDesc.NumDescriptors = FrameCount;
     heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     heapDesc.NodeMask = 0;
 
     if (m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pRtvDescriptorHeap)) != S_OK)
     {
-        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the descriptor heap,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
+        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the descriptor heap, At file: " << __FILE__ << ", At line: " << __LINE__ << "\n");
     }
+
     m_rtvHeapIncrement = m_pDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
-
-
 
     DXGI_SWAP_CHAIN_DESC1 desc = {};
     desc.Width = width;
     desc.Height = height;
     desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Stereo = false;
-    desc.SampleDesc = { 1, 0 };
+    desc.Stereo = FALSE;
+    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Quality = 0;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     desc.BufferCount = FrameCount;
     desc.Scaling = DXGI_SCALING_NONE;
@@ -407,12 +409,23 @@ void DeviceResources::CreateSwapChain(HWND hwnd, UINT width, UINT height)
     desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
     desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    if (m_pFactory->CreateSwapChainForHwnd(m_pCommandQueue, hwnd, &desc, nullptr, nullptr, &m_pSwapChain) != S_OK)
+    IDXGISwapChain1* pSwapChain1 = nullptr;
+    if (FAILED(m_pFactory->CreateSwapChainForHwnd(m_pCommandQueue, hwnd, &desc, nullptr, nullptr, &pSwapChain1)))
     {
-        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the swap chain,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
+        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the swap chain, At file: " << __FILE__ << ", At line: " << __LINE__ << "\n");
+        return;
     }
 
-    m_bufferCount = 2;
+    if (FAILED(pSwapChain1->QueryInterface(__uuidof(IDXGISwapChain3), (void**)&m_pSwapChain)))
+    {
+        PRINT_CONSOLE_OUTPUT(" [RENDER]: Error casting to IDXGISwapChain3, At file: " << __FILE__ << ", At line: " << __LINE__ << "\n");
+        pSwapChain1->Release();
+        return;
+    }
+
+    pSwapChain1->Release();
+
+    m_bufferCount = FrameCount;
 
     CreateRenderTargets();
     CreateDepthStencilResources(width, height);
@@ -423,24 +436,28 @@ void DeviceResources::CreateRenderTargets()
     if (!m_pSwapChain)
         return;
 
-    for (int i = 0; i < m_bufferCount; i++)
+    for (UINT i = 0; i < FrameCount; ++i)
     {
         if (m_pRenderTargets[i])
         {
             m_pRenderTargets[i]->Release();
             m_pRenderTargets[i] = nullptr;
         }
+    }
 
-        if (m_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_pRenderTargets[i])) != S_OK)
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+    for (UINT i = 0; i < FrameCount; ++i)
+    {
+        if (FAILED(m_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_pRenderTargets[i]))))
         {
-            PRINT_CONSOLE_OUTPUT(" [RENDER]: Error creating the swap chain buffer,  At file: " << __FILE__ << ", At line : " << __LINE__ << "\n");
+            PRINT_CONSOLE_OUTPUT(" [RENDER]: Failed to get swap chain buffer " << i << ", At file: " << __FILE__ << ", At line: " << __LINE__ << "\n");
+            continue;
         }
 
-        D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-        cpuHandle.ptr += (size_t)m_rtvHeapIncrement * i;
+        m_pDevice->CreateRenderTargetView(m_pRenderTargets[i], nullptr, rtvHandle);
 
-        m_pDevice->CreateRenderTargetView(m_pRenderTargets[i], 0, cpuHandle);
-
+        rtvHandle.ptr += m_rtvHeapIncrement;
     }
 }
 
@@ -534,3 +551,85 @@ void DeviceResources::UpdateViewport()
     m_scissorRect = { 0, 0, m_renderWidth, m_renderHeight };
 }
 
+ID3D12Resource* DeviceResources::CreateDefaultBuffer(
+    ID3D12Device* device,
+    ID3D12GraphicsCommandList* cmdList,
+    const void* initData,
+    UINT64 byteSize,
+    ID3D12Resource*& uploadBuffer,
+    D3D12_RESOURCE_STATES finalState)
+{
+    ID3D12Resource* defaultBuffer = nullptr;
+
+    D3D12_HEAP_PROPERTIES defaultHeapProps = {};
+    defaultHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    defaultHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    defaultHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    defaultHeapProps.CreationNodeMask = 1;
+    defaultHeapProps.VisibleNodeMask = 1;
+
+    D3D12_RESOURCE_DESC bufferDesc = {};
+    bufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    bufferDesc.Alignment = 0;
+    bufferDesc.Width = byteSize;
+    bufferDesc.Height = 1;
+    bufferDesc.DepthOrArraySize = 1;
+    bufferDesc.MipLevels = 1;
+    bufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    bufferDesc.SampleDesc.Count = 1;
+    bufferDesc.SampleDesc.Quality = 0;
+    bufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    bufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    HRESULT hr = device->CreateCommittedResource(
+        &defaultHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &bufferDesc,
+        D3D12_RESOURCE_STATE_COMMON,
+        nullptr,
+        IID_PPV_ARGS(&defaultBuffer)
+    );
+    if (FAILED(hr)) return nullptr;
+
+    D3D12_HEAP_PROPERTIES uploadHeapProps = {};
+    uploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+    uploadHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    uploadHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    uploadHeapProps.CreationNodeMask = 1;
+    uploadHeapProps.VisibleNodeMask = 1;
+
+    hr = device->CreateCommittedResource(
+        &uploadHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &bufferDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&uploadBuffer)
+    );
+    if (FAILED(hr)) return nullptr;
+
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = defaultBuffer;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
+    cmdList->ResourceBarrier(1, &barrier);
+
+    void* mappedData = nullptr;
+    D3D12_RANGE readRange = {};
+    hr = uploadBuffer->Map(0, &readRange, &mappedData);
+    if (FAILED(hr)) return nullptr;
+
+    memcpy(mappedData, initData, byteSize);
+    uploadBuffer->Unmap(0, nullptr);
+
+    cmdList->CopyBufferRegion(defaultBuffer, 0, uploadBuffer, 0, byteSize);
+
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+    barrier.Transition.StateAfter = finalState;
+    cmdList->ResourceBarrier(1, &barrier);
+
+    return defaultBuffer;
+}

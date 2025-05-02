@@ -34,90 +34,108 @@ void Mesh::ReleaseUploadBuffers()
 {
 	if (m_pIndexBufferUploader)
 	{
-		delete m_pIndexBufferUploader;
-		m_pIndexBufferUploader = nullptr;
+        m_pIndexBufferUploader->Release();
+        m_pIndexBufferUploader = nullptr;
 	}
 	
 	if (m_pVertexBufferUploader)
 	{
-		delete m_pVertexBufferUploader;
+        m_pVertexBufferUploader->Release();
 		m_pVertexBufferUploader = nullptr;
 	}
 }
 
 void Mesh::UploadGeometry()
 {
-	if (!m_pGeometry) return;
+    if (!m_pGeometry) return;
 
-	std::vector<float32> geometryData;
+    std::vector<float> geometryData;
+    int size = 3;
 
-	bool hasColor = !m_pGeometry->colors.empty();
-	bool hasUV = !m_pGeometry->UVs.empty();
-	bool hasNormal = !m_pGeometry->normals.empty();
+    bool hasColor = !m_pGeometry->colors.empty();
+    bool hasUV = !m_pGeometry->UVs.empty();
+    bool hasNormal = !m_pGeometry->normals.empty();
 
-	int32 size = 3;
+    if (hasColor) size += 4;
+    if (hasUV) size += 2;
+    if (hasNormal) size += 3;
 
-	geometryData.reserve(m_pGeometry->positions.size() * size);
+    geometryData.reserve(m_pGeometry->positions.size() * size);
 
-	for (int i = 0; i < m_pGeometry->positions.size(); i++)
-	{
-		geometryData.push_back(m_pGeometry->positions[i].x);
-		geometryData.push_back(m_pGeometry->positions[i].y);
-		geometryData.push_back(m_pGeometry->positions[i].z);
+    for (size_t i = 0; i < m_pGeometry->positions.size(); ++i)
+    {
+        geometryData.push_back(m_pGeometry->positions[i].x);
+        geometryData.push_back(m_pGeometry->positions[i].y);
+        geometryData.push_back(m_pGeometry->positions[i].z);
 
-		if (hasColor)
-		{
-			geometryData.push_back(m_pGeometry->colors[i].x);
-			geometryData.push_back(m_pGeometry->colors[i].y);
-			geometryData.push_back(m_pGeometry->colors[i].z);
-			geometryData.push_back(m_pGeometry->colors[i].w);
-		}
+        if (hasColor)
+        {
+            geometryData.push_back(m_pGeometry->colors[i].x);
+            geometryData.push_back(m_pGeometry->colors[i].y);
+            geometryData.push_back(m_pGeometry->colors[i].z);
+            geometryData.push_back(m_pGeometry->colors[i].w);
+        }
 
-		if (hasUV)
-		{
-			geometryData.push_back(m_pGeometry->UVs[i].x);
-			geometryData.push_back(m_pGeometry->UVs[i].y);
-		}
+        if (hasUV)
+        {
+            geometryData.push_back(m_pGeometry->UVs[i].x);
+            geometryData.push_back(m_pGeometry->UVs[i].y);
+        }
 
-		if (hasNormal)
-		{
-			geometryData.push_back(m_pGeometry->normals[i].x);
-			geometryData.push_back(m_pGeometry->normals[i].y);
-			geometryData.push_back(m_pGeometry->normals[i].z);
-		}
-	}
+        if (hasNormal)
+        {
+            geometryData.push_back(m_pGeometry->normals[i].x);
+            geometryData.push_back(m_pGeometry->normals[i].y);
+            geometryData.push_back(m_pGeometry->normals[i].z);
+        }
+    }
 
-	UploadBuffers(geometryData.data(), static_cast<UINT>(geometryData.size()), m_pGeometry->indexes.data(), static_cast<UINT>(m_pGeometry->indexes.size()));
-
-	m_pVertexBuffer->BufferLocation = m_pVertexBufferUploader->GetResource()->GetGPUVirtualAddress();
-	m_pVertexBuffer->StrideInBytes = sizeof(float32);
-	m_pVertexBuffer->SizeInBytes = static_cast<UINT>(geometryData.size() * sizeof(float32));
-
-	m_pIndexBuffer->BufferLocation = m_pIndexBufferUploader->GetResource()->GetGPUVirtualAddress();
-	m_pIndexBuffer->SizeInBytes = static_cast<UINT>(m_pGeometry->indexes.size() * sizeof(UINT));
-	m_pIndexBuffer->Format = DXGI_FORMAT_R32_UINT;
-
-	m_vertexCount = static_cast<UINT>(geometryData.size());
-	m_indexCount = static_cast<UINT>(m_pGeometry->indexes.size());
+    UploadBuffers(
+        geometryData.data(),
+        static_cast<UINT>(geometryData.size()),
+        m_pGeometry->indexes.data(),
+        static_cast<UINT>(m_pGeometry->indexes.size()),
+        size
+    );
 }
 
-void Mesh::UploadBuffers(float32* vertices, UINT vertexCount, uint32* indices, UINT indexCount)
+void Mesh::UploadBuffers(float32* vertices, UINT vertexCount, uint32* indices, UINT indexCount, UINT floatStride)
 {
-	m_vertexCount = vertexCount;
-	m_indexCount = indexCount;
+    m_vertexCount = vertexCount;
+    m_indexCount = indexCount;
 
-	m_pVertexBufferUploader = new UploadBuffer<float32>(m_pRender->GetDeviceResources()->GetDevice(), m_vertexCount, false);
+    UINT vertexBufferSize = vertexCount * sizeof(float32);
+    UINT indexBufferSize = indexCount * sizeof(uint32);
 
-	for (UINT i = 0; i < m_vertexCount; ++i)
-	{
-		m_pVertexBufferUploader->CopyData(i, vertices[i]);
-	}
+    m_pVertexBufferGPU = m_pRender->GetDeviceResources()->CreateDefaultBuffer(
+        m_pRender->GetDeviceResources()->GetDevice(),
+        m_pRender->GetDeviceResources()->GetCommandList(),
+        vertices,
+        vertexBufferSize,
+        m_pVertexBufferUploader,
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+    );
 
+    m_pIndexBufferGPU = m_pRender->GetDeviceResources()->CreateDefaultBuffer(
+        m_pRender->GetDeviceResources()->GetDevice(),
+        m_pRender->GetDeviceResources()->GetCommandList(),
+        indices,
+        indexBufferSize,
+        m_pIndexBufferUploader,
+        D3D12_RESOURCE_STATE_INDEX_BUFFER
+    );
 
-	m_pIndexBufferUploader = new UploadBuffer<uint32>(m_pRender->GetDeviceResources()->GetDevice(), m_indexCount, false);
+    D3D12_VERTEX_BUFFER_VIEW vertexView = {};
+    vertexView.BufferLocation = m_pVertexBufferGPU->GetGPUVirtualAddress();
+    vertexView.StrideInBytes = sizeof(float32) * floatStride;
+    vertexView.SizeInBytes = vertexBufferSize;
+    m_pVertexBuffer = new D3D12_VERTEX_BUFFER_VIEW(vertexView);
 
-	for (UINT i = 0; i < m_indexCount; ++i)
-	{
-		m_pIndexBufferUploader->CopyData(i, indices[i]);
-	}
+    D3D12_INDEX_BUFFER_VIEW indexView = {};
+    indexView.BufferLocation = m_pIndexBufferGPU->GetGPUVirtualAddress();
+    indexView.Format = DXGI_FORMAT_R32_UINT;
+    indexView.SizeInBytes = indexBufferSize;
+    m_pIndexBuffer = new D3D12_INDEX_BUFFER_VIEW(indexView);
 }
+
+

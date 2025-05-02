@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\Camera.h" />
     <ClInclude Include="include\Components\Component.h" />
+    <ClInclude Include="include\Components\ComponentBase.h" />
+    <ClInclude Include="include\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameManager.h" />
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\pch.h" />
@@ -28,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\Component.cpp" />
+    <ClCompile Include="src\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\pch.cpp" />

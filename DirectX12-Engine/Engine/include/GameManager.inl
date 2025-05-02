@@ -1,7 +1,7 @@
-#include "GameManager.h"
 #ifndef GAMEMANAGER__INL
 #define GAMEMANAGER__INL
 
+#include "GameManager.h"
 namespace Engine
 {
 	inline void GameManager::Init(HINSTANCE const hInstance) 
@@ -22,7 +22,7 @@ namespace Engine
 	inline Scene& GameManager::GetActiveScene() { return *m_pInstance->m_pActiveScene; }
 
 	inline float32& GameManager::GetFixedDeltaTime() { return m_pInstance->m_fixedDeltaTime; }
-	inline RenderSystem& GameManager::GetRenderSystem() { return *m_pInstance->m_pRenderSystem; };
+	inline RenderSystem& GameManager::GetRenderSystem() { return *m_pInstance->m_pRenderSystem; }
 }
 
 #endif // !GAMEMANAGER__INL

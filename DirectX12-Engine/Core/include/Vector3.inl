@@ -1,3 +1,4 @@
+#include "Vector3.hpp"
 #ifndef VECTOR3__INL
 #define VECTOR3__INL
 

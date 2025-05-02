@@ -10,12 +10,16 @@
 #include <regex>
 #include <iostream>
 
+#include <d3d12.h>
+
 
 
 class PipelineStateObjectManager
 {
+public:
     struct PipelineStateConfig
     {
+        LPCWSTR shaderPath;
         ID3D12RootSignature* rootSignature;
         ID3D12PipelineState* pipelineState;
     };
@@ -53,7 +57,7 @@ private:
 private:
     T_DXGI_INFO HlslTypeToDxgiFormat(const std::string& type);
     std::vector<InputLayoutElement> ParseVertexInStruct(const std::string& hlslFilePath);
-    D3D12_INPUT_LAYOUT_DESC CreateInputLayoutDescFromElements(const std::vector<InputLayoutElement>& elements, std::vector<D3D12_INPUT_ELEMENT_DESC>& outDescs);
+    D3D12_INPUT_LAYOUT_DESC CreateInputLayoutDescFromElements(const std::vector<PipelineStateObjectManager::InputLayoutElement>& elements, std::vector<D3D12_INPUT_ELEMENT_DESC>& outDescs);
 
 private:
     ID3D12Device* m_pDevice;

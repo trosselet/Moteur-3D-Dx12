@@ -29,6 +29,8 @@ namespace Engine
 
 		static RenderSystem& GetRenderSystem();
 
+		static Window& GetWindow() { return *m_pInstance->m_pWindow; };
+
 	private:
 		inline static GameManager* m_pInstance = nullptr;
 		GameManager(HINSTANCE hInstance);

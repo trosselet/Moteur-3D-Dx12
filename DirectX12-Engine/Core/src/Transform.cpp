@@ -30,7 +30,7 @@ DirectX::XMVECTOR TRANSFORM::GetPosition()
 	return XMLoadFloat3(&mvPosition);
 }
 
-void TRANSFORM::SetPosition(const DirectX::XMFLOAT3& _vec)
+void TRANSFORM::SetPosition(DirectX::XMFLOAT3& _vec)
 {
 	mvPosition = _vec;
 	mIsUpdated = false;
