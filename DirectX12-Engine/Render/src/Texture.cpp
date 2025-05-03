@@ -28,11 +28,13 @@ Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
         PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to load texture. HRESULT: " << hr << ", mTexture : " << m_pTexture << "\n");
         return;
     }
-
+    
+    UINT descriptorIndex = pGraphic->GetRender()->GetDeviceResources()->AllocateSRVHeapIndex();
+    
     UINT size = pGraphic->GetRender()->GetDeviceResources()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle = pGraphic->GetRender()->GetDeviceResources()->GetCbvSrvUavDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
-    descriptorHandle.ptr += (0 * static_cast<unsigned long long>(size));
+    descriptorHandle.ptr += static_cast<SIZE_T>(descriptorIndex) * size;
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -42,10 +44,12 @@ Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
     srvDesc.Texture2D.MipLevels = m_pTexture->GetDesc().MipLevels;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = pGraphic->GetRender()->GetDeviceResources()->GetCbvSrvUavDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
+    gpuHandle.ptr += static_cast<SIZE_T>(descriptorIndex) * size;
+
     pGraphic->GetRender()->GetDeviceResources()->GetDevice()->CreateShaderResourceView(m_pTexture, &srvDesc, descriptorHandle);
 
-    m_textureAddress = pGraphic->GetRender()->GetDeviceResources()->GetCbvSrvUavDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-    m_textureAddress.ptr += (0 * static_cast<unsigned long long>(size));
+    m_textureAddress = gpuHandle;
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE Texture::GetTextureAddress()

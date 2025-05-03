@@ -42,6 +42,8 @@ public:
 
 	ID3D12Resource* CreateDefaultBuffer(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, const void* initData, UINT64 byteSize, ID3D12Resource*& uploadBuffer, D3D12_RESOURCE_STATES finalState);
 
+	UINT AllocateSRVHeapIndex() { return m_srvHeapIndex++; };
+
 private:
 	void ReleaseResources();
 	void CreateDevice();
@@ -64,6 +66,8 @@ private:
 	UINT m_bufferCount;
 	UINT m_currentSwapChainBuffer;
 	UINT m_rtvHeapIncrement;
+
+	uint32 m_srvHeapIndex = 0;
 
 	ID3D12DescriptorHeap* m_pDsvDescriptorHeap;
 	ID3D12Resource* m_pDepthStencil;
