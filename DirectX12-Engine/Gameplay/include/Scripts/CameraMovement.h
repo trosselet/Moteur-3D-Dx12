@@ -3,15 +3,18 @@
 
 #include "IScript.h"
 
-class Rotate : public Engine::IScript
+class CameraMovement : public Engine::IScript
 {
 public:
-	Rotate();
-	~Rotate();
+	CameraMovement();
+	~CameraMovement();
 
 	void OnStart() override;
 	void OnUpdate() override;
 	void OnFixedUpdate() override;
+
+private:
+	int cameraSpeed;
 };
 
 

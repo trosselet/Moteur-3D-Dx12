@@ -48,6 +48,14 @@ Vector<T, 3>::Vector(Vector const& other) :
     z(other.z) {
 }
 
+template<typename T>
+inline Vector<T, 3>::Vector(DirectX::XMFLOAT3 const& float3) :
+    x(float3.x),
+    y(float3.y),
+    z(float3.z)
+{
+}
+
 
 template <typename T>
 Vector<T, 3>& Vector<T, 3>::operator=(Vector const& other)

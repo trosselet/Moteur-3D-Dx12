@@ -5,6 +5,8 @@
 #include <cmath>
 #include "Vector.hpp"
 
+#include <DirectXMath.h>
+
 template <typename T>
 struct Vector<T, 3>
 {
@@ -26,6 +28,13 @@ struct Vector<T, 3>
     explicit Vector(T x, T y, T z);
     Vector(T const (&& values)[3]);
     Vector(Vector const& other);
+
+    Vector(DirectX::XMFLOAT3 const& float3);
+
+    [[nodiscard]] DirectX::XMFLOAT3 ToXMFLOAT3() const
+    {
+        return DirectX::XMFLOAT3(x, y, z);
+    }
 
     Vector& operator=(Vector const& other);
 

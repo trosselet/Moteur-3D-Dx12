@@ -84,9 +84,9 @@ Material* GraphicEngine::CreateMaterial(PipelineStateObjectManager::PipelineStat
 
 void GraphicEngine::UpdateCameraAt(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix)
 {
-	DirectX::XMFLOAT3 d12Position = DirectX::XMFLOAT3(position.x, position.y, position.z);
-	DirectX::XMFLOAT3 d12Target = DirectX::XMFLOAT3(target.x, target.y, target.z);
-	DirectX::XMFLOAT3 d12Up = DirectX::XMFLOAT3(up.x, up.y, up.z);
+	DirectX::XMFLOAT3 d12Position = DirectX::XMFLOAT3(position.ToXMFLOAT3());
+	DirectX::XMFLOAT3 d12Target = DirectX::XMFLOAT3(target.ToXMFLOAT3());
+	DirectX::XMFLOAT3 d12Up = DirectX::XMFLOAT3(up.ToXMFLOAT3());
 
 	DirectX::XMVECTOR camPos = XMLoadFloat3(&d12Position);
 	DirectX::XMVECTOR camTarget = XMLoadFloat3(&d12Target);
@@ -100,16 +100,16 @@ void GraphicEngine::UpdateCameraAt(Vector3f const& position, Vector3f const& tar
 
 	CameraCB camera = {};
 	DirectX::XMStoreFloat4x4(&camera.projectionMatrix, projectionMatrix);
-	DirectX::XMStoreFloat4x4(&camera.viewMatrix, projectionMatrix);
+	DirectX::XMStoreFloat4x4(&camera.viewMatrix, viewMatrix);
 
 	m_render.m_pCbCurrentViewProjInstance->CopyData(0, camera);
 }
 
 void GraphicEngine::UpdateCameraTo(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix)
 {
-	DirectX::XMFLOAT3 d12Position = DirectX::XMFLOAT3(position.x, position.y, position.z);
-	DirectX::XMFLOAT3 d12Target = DirectX::XMFLOAT3(target.x, target.y, target.z);
-	DirectX::XMFLOAT3 d12Up = DirectX::XMFLOAT3(up.x, up.y, up.z);
+	DirectX::XMFLOAT3 d12Position = DirectX::XMFLOAT3(position.ToXMFLOAT3());
+	DirectX::XMFLOAT3 d12Target = DirectX::XMFLOAT3(target.ToXMFLOAT3());
+	DirectX::XMFLOAT3 d12Up = DirectX::XMFLOAT3(up.ToXMFLOAT3());
 
 	DirectX::XMVECTOR camPos = XMLoadFloat3(&d12Position);
 	DirectX::XMVECTOR camTarget = XMLoadFloat3(&d12Target);
@@ -123,7 +123,7 @@ void GraphicEngine::UpdateCameraTo(Vector3f const& position, Vector3f const& tar
 
 	CameraCB camera = {};
 	DirectX::XMStoreFloat4x4(&camera.projectionMatrix, projectionMatrix);
-	DirectX::XMStoreFloat4x4(&camera.viewMatrix, projectionMatrix);
+	DirectX::XMStoreFloat4x4(&camera.viewMatrix, viewMatrix);
 
 	m_render.m_pCbCurrentViewProjInstance->CopyData(0, camera);
 }

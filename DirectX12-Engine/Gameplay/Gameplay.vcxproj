@@ -140,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Scripts\Rotate.cpp" />
+    <ClCompile Include="src\Scripts\CameraMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader\DefaultShader.hlsl">
@@ -148,7 +148,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Scripts\Rotate.h" />
+    <ClInclude Include="include\Scripts\CameraMovement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,9 +20,9 @@ namespace Engine
 		GameObject* pCamera = GameManager::GetActiveScene().GetMainCamera();
 		Camera& cameraComponent = pCamera->GetComponent<Camera>();
 		m_pGraphics->UpdateCameraTo(
-			Vector3f{ pCamera->m_pTransform->GetPositionFLOAT().x, pCamera->m_pTransform->GetPositionFLOAT().y, pCamera->m_pTransform->GetPositionFLOAT().z },
-			Vector3f{ pCamera->m_pTransform->Forward().x, pCamera->m_pTransform->Forward().y, pCamera->m_pTransform->Forward().z },
-			Vector3f{ pCamera->m_pTransform->Up().x, pCamera->m_pTransform->Up().y, pCamera->m_pTransform->Up().z },
+			Vector3f{ pCamera->m_pTransform->GetPositionFLOAT() },
+			Vector3f{ pCamera->m_pTransform->GetPositionFLOAT().x + pCamera->m_pTransform->Forward().x, pCamera->m_pTransform->GetPositionFLOAT().y + pCamera->m_pTransform->Forward().y, pCamera->m_pTransform->GetPositionFLOAT().z + pCamera->m_pTransform->Forward().z },
+			Vector3f{ pCamera->m_pTransform->Up() },
 			cameraComponent.viewWidth,
 			cameraComponent.viewHeight,
 			cameraComponent.fov,
@@ -31,7 +31,6 @@ namespace Engine
 			cameraComponent.projectionMatrix,
 			cameraComponent.viewMatrix
 		);
-
 
 		for (std::vector<MeshRenderer const*> const& meshRendererLayer : m_meshRenderers)
 		{

@@ -29,13 +29,12 @@ cbuffer cbPerObject : register(b1)
 VertexOut vsmain(VertexIn vin)
 {
     VertexOut vout;
-    float4 posW = mul(float4(vin.position, 1.0f), gWorld);
-    vout.position = mul(posW, gView);
-    vout.position = mul(posW, gProj);
+    vout.position = mul(mul(mul(float4(vin.position, 1.0f), gWorld), gView), gProj);
     vout.color = vin.color;
     vout.texcoord = vin.texcoord;
     return vout;
 }
+
 
 float4 psmain(VertexOut pin) : SV_TARGET
 {
