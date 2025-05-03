@@ -6,6 +6,7 @@
 #include "Define.h"
 #include "Scene.h"
 #include "Systems/RenderSystem.h"
+#include "Systems/ScriptSystem.h"
 #include "Window.h"
 
 namespace Engine
@@ -22,6 +23,7 @@ namespace Engine
 		static float32& GetFixedDeltaTime();
 
 		static RenderSystem& GetRenderSystem();
+		static ScriptSystem& GetScriptSystem() { return *m_pInstance->m_pScriptSystem; }
 
 		static Window& GetWindow() { return *m_pInstance->m_pWindow; };
 
@@ -37,6 +39,7 @@ namespace Engine
 	private:
 		Window* m_pWindow = nullptr;
 		RenderSystem* m_pRenderSystem = nullptr;
+		ScriptSystem* m_pScriptSystem = nullptr;
 
 		std::vector<Scene>  m_scenes;
 		std::vector<Scene*> m_loadedScenes;

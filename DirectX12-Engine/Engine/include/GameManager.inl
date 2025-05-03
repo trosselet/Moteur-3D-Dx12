@@ -1,3 +1,4 @@
+#include "GameManager.h"
 #ifndef GAMEMANAGER__INL
 #define GAMEMANAGER__INL
 

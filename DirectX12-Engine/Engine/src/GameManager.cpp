@@ -7,7 +7,8 @@ namespace Engine
 {
 	GameManager::GameManager(HINSTANCE hInstance) : 
 		m_pWindow(new Window(hInstance, Vector2i{ 1920, 1080 }, "GameEngine")),
-		m_pRenderSystem(new RenderSystem())
+		m_pRenderSystem(new RenderSystem()),
+		m_pScriptSystem(new ScriptSystem())
 	{
 		m_pRenderSystem->m_pGraphics = m_pWindow->GetGraphics();
 		m_pRenderSystem->m_pRender = m_pWindow->GetGraphics()->GetRender();
@@ -31,10 +32,11 @@ namespace Engine
 
 			while (m_elapsedTime >= m_fixedDeltaTime)
 			{
+				m_pScriptSystem->OnFixedUpdate();
 				m_elapsedTime -= m_fixedDeltaTime;
 			}
 
-
+			m_pScriptSystem->OnUpdate();
 			m_pRenderSystem->HandleRendering();
 
 		}

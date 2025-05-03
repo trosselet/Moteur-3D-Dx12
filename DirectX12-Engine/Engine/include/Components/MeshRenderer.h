@@ -8,7 +8,7 @@
 
 #include "PipelineStateObjectManager.h"
 
-class Geometry;
+struct Geometry;
 class Mesh;
 class Material;
 

@@ -1,5 +1,3 @@
-
-
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 
@@ -7,6 +5,8 @@
 #include "Scene.h"
 
 #include "GameManager.h"
+
+#include "Scripts/Rotate.h"
 
 int main()
 {
@@ -39,6 +39,8 @@ int main()
 	Engine::MeshRenderer& pCubeMeshRendererTest = pCube->AddComponent<Engine::MeshRenderer>();
 	pCubeMeshRendererTest.SetCube("../Gameplay/texture/grid_placeholder_material.dds");
 	pCube->SetName("Cube");
+
+	pCube->AddScript<Rotate>();
 
 	Engine::GameObject* const pSphere = new Engine::GameObject(scene);
 	pSphere->m_pTransform->SetPosition({ -1.0f, 0.0f, 5.0f });
