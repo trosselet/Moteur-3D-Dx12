@@ -5,6 +5,7 @@
 
 #include "GameObject.h"
 #include "GameManager.h"
+#include "GraphicEngine.h"
 
 namespace Engine
 {
@@ -77,10 +78,29 @@ namespace Engine
 			pCamera->m_created = true;
 		}
 		m_camerasToCreate.clear();
+
+		for (Light* const pLight : m_lightsToCreate)
+		{
+			pLight->m_toBeCreated = false;
+			pLight->m_created = true;
+
+			GameManager::GetWindow().GetGraphics()->AddLight(&pLight->m_lightCb);
+		}
+		m_lightsToCreate.clear();
+
 	}
 
 	void Scene::HandleDestruction()
 	{
+		for (uint16 i = 0; i < m_lights.size(); i++)
+		{
+			Light* const pLight = m_lights[i];
+			if (pLight->m_toBeDeleted == false) continue;
+
+			m_lights.erase(m_lights.begin() + i);
+			delete pLight;
+		}
+
 		for (uint16 i = 0; i < m_cameras.size(); i++)
 		{
 			Camera* const pCamera = m_cameras[i];

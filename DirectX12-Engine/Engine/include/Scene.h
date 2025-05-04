@@ -7,7 +7,7 @@
 
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
-
+#include "Components/Light.h"
 
 
 
@@ -35,11 +35,13 @@ namespace Engine
 		std::vector<GameObject*> const& GetGameObjects() const;
 		std::vector<MeshRenderer*> const& GetMeshRenderers() const;
 		std::vector<Camera*> const& GetCameras() const;
+		std::vector<Light*> const& GetLights() const;
 
 
 		std::vector<GameObject*>& GetGameObjects();
 		std::vector<MeshRenderer*>& GetMeshRenderers();
 		std::vector<Camera*>& GetCameras();
+		std::vector<Light*>& GetLights();
 
 		void HandleCreation();
 		void HandleDestruction();
@@ -57,17 +59,20 @@ namespace Engine
 		std::vector<uint32> m_gameObjectsIDs;
 		std::vector<MeshRenderer*> m_meshRenderers;
 		std::vector<Camera*> m_cameras;
+		std::vector<Light*> m_lights;
 
 
 		std::vector<GameObject*> m_gameObjectsToCreate;
 		std::vector<MeshRenderer*> m_meshRenderersToCreate;
 		std::vector<Camera*> m_camerasToCreate;
+		std::vector<Light*> m_lightsToCreate;
 
 		std::vector<GameObject*> m_gameObjectsToDelete;
 
 
 		friend struct Camera;
 		friend struct MeshRenderer;
+		friend struct Light;
 		friend class GameObject;
 		friend class GameManager;
 	};

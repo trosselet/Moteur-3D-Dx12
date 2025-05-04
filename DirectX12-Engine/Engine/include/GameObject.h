@@ -7,6 +7,7 @@
 
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
+#include "Components/Light.h"
 
 #include "IScript.h"
 #include "Systems/ScriptSystem.h"
@@ -143,6 +144,22 @@ namespace Engine
 		return *pCamera;
 	}
 
+	template<>
+	inline Light& GameObject::AddComponent<Light>()
+	{
+		assert((HasComponent<Light>() == false));
+
+		Light* const pLight = new Light();
+		m_pScene->m_lights.push_back(pLight);
+		pLight->m_pOwner = this;
+		m_pScene->m_lightsToCreate.push_back(pLight);
+
+		m_components[Light::Tag] = pLight;
+		m_componentBitmask |= 1 << (Light::Tag - 1);
+
+		return *pLight;
+	}
+
 	template <>
 	inline void GameObject::RemoveComponent<MeshRenderer>()
 	{
@@ -156,6 +173,13 @@ namespace Engine
 	{
 		assert(HasComponent<Camera>());
 		m_components[Camera::Tag]->Destroy();
+	}
+
+	template <>
+	inline void GameObject::RemoveComponent<Light>()
+	{
+		assert(HasComponent<Light>());
+		m_components[Light::Tag]->Destroy();
 	}
 	
 }

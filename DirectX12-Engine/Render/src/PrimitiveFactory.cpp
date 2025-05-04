@@ -61,6 +61,8 @@ void PrimitiveFactory::InitializePrimitiveGeometry()
 
     circle.positions.push_back({ 0.0f, 0.0f, 0.0f });
     circle.UVs.push_back({ 0.5f, 0.5f });
+    circle.normals.push_back({ 0.0f, 0.0f, 1.0f });
+
 
     float32 angleStep = DirectX::XM_2PI / detailLevel;
     for (uint32 i = 0; i < detailLevel; ++i)
@@ -74,6 +76,7 @@ void PrimitiveFactory::InitializePrimitiveGeometry()
 
         circle.positions.push_back({ x, y, 0.0f });
         circle.UVs.push_back({ u, v });
+        circle.normals.push_back({ 0.0f, 0.0f, 1.0f });
     }
 
     for (uint32 i = 0; i < detailLevel; ++i)

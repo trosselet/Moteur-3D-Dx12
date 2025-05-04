@@ -11,7 +11,7 @@ Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
 
     HRESULT hr = NULL;
 
-    std::string filePath = path;
+    std::string filePath = "../Gameplay/texture/" + std::string(reinterpret_cast<const char*>(path));
 
     std::wstring wFilePath(filePath.begin(), filePath.end());
 

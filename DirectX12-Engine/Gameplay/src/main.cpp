@@ -1,5 +1,6 @@
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
+#include "Components/Light.h"
 
 #include "GameObject.h"
 #include "Scene.h"
@@ -26,28 +27,41 @@ int main()
 	Engine::GameObject* const pCircle = new Engine::GameObject(scene);
 	pCircle->m_pTransform->SetPosition({ 0.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pCircleMeshRendererTest = pCircle->AddComponent<Engine::MeshRenderer>();
-	pCircleMeshRendererTest.SetCircle("../Gameplay/texture/grid_placeholder_material.dds");
+	pCircleMeshRendererTest.SetCircle("grid_placeholder_material.dds");
 	pCircle->SetName("Circle");
 
 	Engine::GameObject* const pRectangle = new Engine::GameObject(scene);
 	pRectangle->m_pTransform->SetPosition({ 1.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pRectangleMeshRendererTest = pRectangle->AddComponent<Engine::MeshRenderer>();
-	pRectangleMeshRendererTest.SetRectangle("../Gameplay/texture/grid_placeholder_material.dds");
+	pRectangleMeshRendererTest.SetRectangle("grid_placeholder_material.dds");
 	pRectangle->SetName("Rectangle");
 
 	Engine::GameObject* const pCube = new Engine::GameObject(scene);
-	pCube->m_pTransform->SetPosition({ 2.0f, 0.0f, 5.0f });
+	pCube->m_pTransform->SetPosition({ -1.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pCubeMeshRendererTest = pCube->AddComponent<Engine::MeshRenderer>();
-	pCubeMeshRendererTest.SetCube("../Gameplay/texture/grid_placeholder_material.dds");
+	pCubeMeshRendererTest.SetCube("grid_placeholder_material.dds");
 	pCube->SetName("Cube");
 
 	Engine::GameObject* const pSphere = new Engine::GameObject(scene);
 	pSphere->m_pTransform->SetPosition({ -1.0f, 0.0f, 5.0f });
 	pSphere->m_pTransform->Scale({ -1000.0f, -1000.0f, -1000.0f });
 	Engine::MeshRenderer& pSphereMeshRendererTest = pSphere->AddComponent<Engine::MeshRenderer>();
-	pSphereMeshRendererTest.SetSphere("../Gameplay/texture/sky.dds");
+	pSphereMeshRendererTest.SetSphere("sky.dds");
 	pSphere->SetName("Sphere");
 
+	Engine::GameObject* const pLight = new Engine::GameObject(scene);
+	pLight->m_pTransform->SetPosition({ 0, 3.0f, 5.0f });
+	pLight->m_pTransform->Scale({ 0.5f, 0.5f, 0.5f });
+	/*Engine::MeshRenderer& pLightMeshRenderer = pLight->AddComponent<Engine::MeshRenderer>();
+	pLightMeshRenderer.SetSphere("wood.dds");*/
+	Engine::Light& pLightLightComponent = pLight->AddComponent<Engine::Light>();
+
+	pLightLightComponent.SetType(0);
+	pLightLightComponent.SetColor(Vector3f({ 1.0f,1.0f,1.0f }));
+	pLightLightComponent.SetPosition(Vector3f({ 0.0f,1.0f,0.0f }));
+	pLightLightComponent.SetIntensity(1.0f);
+	pLightLightComponent.SetDirection(Vector3f({ 0.0f,-1.0f,0.0f }));
+	pLightLightComponent.SetSpotAngle(0.0f);
 
 
 	Engine::GameManager::Run();

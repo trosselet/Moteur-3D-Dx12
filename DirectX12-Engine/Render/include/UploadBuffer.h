@@ -16,6 +16,8 @@
 
 #include "DebugMacro.h"
 
+#include "Define.h"
+
 struct ConstantBuffer
 {
 };
@@ -29,6 +31,33 @@ struct CameraCB : ConstantBuffer
 struct ObjectData : ConstantBuffer
 {
     DirectX::XMFLOAT4X4 world;
+};
+
+struct MaterialProperties : ConstantBuffer
+{
+    DirectX::XMFLOAT4 ambientLightColor;
+    DirectX::XMFLOAT4 ambientLight;
+    DirectX::XMFLOAT4 diffuseLight;
+    DirectX::XMFLOAT4 specularLight;
+
+    float32 shininess;
+    float32 padding[3];
+
+};
+
+struct LightCB : ConstantBuffer
+{
+    DirectX::XMFLOAT3 color;
+    int32 type;
+
+    DirectX::XMFLOAT3 Direction;
+    float32 intensity;
+
+    DirectX::XMFLOAT3 Position;
+    float32 spotLightAngle;
+
+    float32 padding[4];
+
 };
 
 template<typename T>

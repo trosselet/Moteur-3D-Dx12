@@ -147,11 +147,11 @@ void PipelineStateObjectManager::CreateRootSignature(const char* name)
     }
 
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-    rootSignatureDesc.NumParameters = 3;
+    rootSignatureDesc.NumParameters = 5;
     rootSignatureDesc.NumStaticSamplers = 1;
     rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-    D3D12_ROOT_PARAMETER rootParameters[3] = {};
+    D3D12_ROOT_PARAMETER rootParameters[5] = {};
 
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -163,17 +163,27 @@ void PipelineStateObjectManager::CreateRootSignature(const char* name)
     rootParameters[1].Descriptor.RegisterSpace = 0;
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    rootParameters[2].DescriptorTable.NumDescriptorRanges = 1;
+    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[2].Descriptor.ShaderRegister = 2;
+    rootParameters[2].Descriptor.RegisterSpace = 0;
+    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+    rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[3].Descriptor.ShaderRegister = 3;
+    rootParameters[3].Descriptor.RegisterSpace = 0;
+    rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    rootParameters[4].DescriptorTable.NumDescriptorRanges = 1;
     D3D12_DESCRIPTOR_RANGE srvRange = {};
     srvRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     srvRange.NumDescriptors = 1;
     srvRange.BaseShaderRegister = 0; // t0
     srvRange.RegisterSpace = 0;
     srvRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-    rootParameters[2].DescriptorTable.pDescriptorRanges = &srvRange;
-    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    shaderPos = 2;
+    rootParameters[4].DescriptorTable.pDescriptorRanges = &srvRange;
+    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    shaderPos = 4;
 
     D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
     samplerDesc.Filter = D3D12_FILTER_ANISOTROPIC;

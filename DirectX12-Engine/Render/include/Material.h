@@ -4,6 +4,7 @@
 #include "UploadBuffer.h"
 
 #include "Define.h"
+#include "Vector.hpp"
 
 #include "PipelineStateObjectManager.h"
 
@@ -19,10 +20,13 @@ public:
 	void SetTexture(Texture* pTexture);
 	bool UpdateTexture(int16 position);
 	
+	void SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess);
+
 	Texture* GetTexture();
 	PipelineStateObjectManager::PipelineStateConfig* GetShader();
 
 	UploadBuffer<ObjectData>* GetUploadBuffer();
+	UploadBuffer<MaterialProperties>* GetLightUploadBuffer();
 
 	void UpdateWorldConstantBuffer(DirectX::XMMATRIX const& matrix);
 
@@ -33,6 +37,9 @@ private:
 	Render* m_pRender = nullptr;
 
 	UploadBuffer<ObjectData> m_uploadBuffer;
+	UploadBuffer<MaterialProperties> m_lightUploadBuffer;
+
+	MaterialProperties m_materialProperties;
 
 };
 

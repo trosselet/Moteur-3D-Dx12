@@ -14,6 +14,7 @@ struct Geometry;
 class Mesh;
 class Texture;
 class Material;
+struct LightCB;
 enum PrimitiveType : uint8;
 
 class GraphicEngine
@@ -35,6 +36,8 @@ public:
 	Mesh* CreateMesh(Geometry* pGeometry);
 	Texture* CreateTexture(char const* filePath);
 	Material* CreateMaterial(PipelineStateObjectManager::PipelineStateConfig* pShader);
+
+	void AddLight(LightCB* pLight);
 
 	void UpdateCameraAt(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix);
 	void UpdateCameraTo(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix);

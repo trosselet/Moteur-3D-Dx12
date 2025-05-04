@@ -25,6 +25,7 @@ Render::Render(Window* const pWindow, uint32 const renderWidth, uint32 const ren
 	m_pDeviceResources->Resize(renderWidth, renderHeight);
 
 	m_pCbCurrentViewProjInstance = new UploadBuffer<CameraCB>(m_pDeviceResources->GetDevice(), 1, 1);
+	m_pCbCurrentLightInstance = new UploadBuffer<LightCB>(m_pDeviceResources->GetDevice(), 1, 1);
 
 }
 
@@ -35,6 +36,17 @@ Render::~Render()
 DeviceResources* Render::GetDeviceResources()
 {
 	return m_pDeviceResources;
+}
+
+
+void Render::CopyLightsData()
+{
+	for (UINT i = 0; i < m_lightSources.size(); ++i)
+	{
+		assert(m_lightSources[i] != nullptr);
+		std::cout << "Light[" << i << "] Intensity: " << m_lightSources[i]->intensity << std::endl;
+		m_pCbCurrentLightInstance->CopyData(i, *m_lightSources[i]);
+	}
 }
 
 bool Render::Clear()
@@ -82,6 +94,7 @@ bool Render::DrawObject(Mesh* pMesh, Material* pMaterial, DirectX::XMFLOAT4X4 co
 	PipelineStateObjectManager::PipelineStateConfig* pShader = pMaterial->GetShader();
 	assert(pShader != nullptr);
 
+	CopyLightsData();
 	pMaterial->UpdateWorldConstantBuffer(DirectX::XMLoadFloat4x4(&objworldMatrix));
 
 	m_pDeviceResources->GetCommandList()->SetPipelineState(pShader->pipelineState);
@@ -99,8 +112,8 @@ bool Render::DrawObject(Mesh* pMesh, Material* pMaterial, DirectX::XMFLOAT4X4 co
 
 	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(0, m_pCbCurrentViewProjInstance->GetResource()->GetGPUVirtualAddress());
 	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(1, pMaterial->GetUploadBuffer()->GetResource()->GetGPUVirtualAddress());
-
-	// TODO ADD NORMAL
+	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(2, pMaterial->GetLightUploadBuffer()->GetResource()->GetGPUVirtualAddress());
+	m_pDeviceResources->GetCommandList()->SetGraphicsRootConstantBufferView(3, m_pCbCurrentLightInstance->GetResource()->GetGPUVirtualAddress());
 	
 	m_pDeviceResources->GetCommandList()->DrawIndexedInstanced(pMesh->GetIndexCount(), 1, 0, 0, 0);
 

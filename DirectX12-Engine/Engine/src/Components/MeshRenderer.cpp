@@ -23,7 +23,7 @@ namespace Engine
 
 		
 		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
-		Texture* pTexture = graphics.CreateTexture("../Gameplay/texture/DefaultTex.dds");
+		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
 
 		m_pMesh = graphics.CreateMesh(m_pGeometry);
 		m_pMaterial = graphics.CreateMaterial(m_pShader);
@@ -60,7 +60,7 @@ namespace Engine
 
 
 		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
-		Texture* pTexture = graphics.CreateTexture("../Gameplay/texture/DefaultTex.dds");
+		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
 
 		m_pMesh = graphics.CreateMesh(m_pGeometry);
 		m_pMaterial = graphics.CreateMaterial(m_pShader);
@@ -96,7 +96,7 @@ namespace Engine
 
 
 		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
-		Texture* pTexture = graphics.CreateTexture("../Gameplay/texture/DefaultTex.dds");
+		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
 
 		m_pMesh = graphics.CreateMesh(m_pGeometry);
 		m_pMaterial = graphics.CreateMaterial(m_pShader);
@@ -132,7 +132,7 @@ namespace Engine
 
 
 		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
-		Texture* pTexture = graphics.CreateTexture("../Gameplay/texture/DefaultTex.dds");
+		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
 
 		m_pMesh = graphics.CreateMesh(m_pGeometry);
 		m_pMaterial = graphics.CreateMaterial(m_pShader);

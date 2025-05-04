@@ -27,6 +27,8 @@ public:
 	DeviceResources* GetDeviceResources();
 	inline PipelineStateObjectManager* GetPSOManager() { return m_pPSOManager; };
 
+	void CopyLightsData();
+
 	bool Clear();
 	bool DrawObject(Mesh* pMesh, Material* pMaterial, DirectX::XMFLOAT4X4 const& objworldMatrix);
 	bool Display();
@@ -40,6 +42,9 @@ private:
 	PipelineStateObjectManager* m_pPSOManager;
 
 	UploadBuffer<CameraCB>* m_pCbCurrentViewProjInstance;
+	UploadBuffer<LightCB>* m_pCbCurrentLightInstance;
+
+	std::vector<LightCB*> m_lightSources;
 
 };
 

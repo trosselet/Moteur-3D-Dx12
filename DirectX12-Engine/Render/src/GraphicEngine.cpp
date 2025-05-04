@@ -82,6 +82,11 @@ Material* GraphicEngine::CreateMaterial(PipelineStateObjectManager::PipelineStat
 	return pMat;
 }
 
+void GraphicEngine::AddLight(LightCB* pLight)
+{
+	m_render.m_lightSources.push_back(pLight);
+}
+
 void GraphicEngine::UpdateCameraAt(Vector3f const& position, Vector3f const& target, Vector3f const& up, float32 viewWidth, float32 viewHeight, float32 fov, float32 cNear, float32 cFar, DirectX::XMMATRIX& projectionMatrix, DirectX::XMMATRIX& viewMatrix)
 {
 	DirectX::XMFLOAT3 d12Position = DirectX::XMFLOAT3(position.ToXMFLOAT3());
