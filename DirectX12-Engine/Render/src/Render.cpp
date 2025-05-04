@@ -43,8 +43,6 @@ void Render::CopyLightsData()
 {
 	for (UINT i = 0; i < m_lightSources.size(); ++i)
 	{
-		assert(m_lightSources[i] != nullptr);
-		std::cout << "Light[" << i << "] Intensity: " << m_lightSources[i]->intensity << std::endl;
 		m_pCbCurrentLightInstance->CopyData(i, *m_lightSources[i]);
 	}
 }

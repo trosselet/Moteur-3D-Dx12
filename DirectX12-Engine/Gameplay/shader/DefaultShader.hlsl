@@ -82,13 +82,6 @@ float4 psmain(VertexOut pin) : SV_TARGET
     {
         lightDir = normalize(-lightDirection);
     }
-    else if (type == LIGHT_TYPE_POINT)
-    {
-        float3 lightToFrag = pin.worldPos - lightPosition;
-        float distance = length(lightToFrag);
-        lightDir = normalize(-lightToFrag);
-        attenuation = 1.0 / (distance * distance);
-    }
     else if (type == LIGHT_TYPE_SPOT)
     {
         float3 lightToFrag = pin.worldPos - lightPosition;
@@ -98,14 +91,17 @@ float4 psmain(VertexOut pin) : SV_TARGET
 
         float3 spotDir = normalize(-lightDirection);
         float angle = dot(lightDir, spotDir);
-        if (angle > cos(spotLightAngle))
-        {
-            spotFactor = pow(angle, 10);
-        }
-        else
-        {
-            spotFactor = 0.0;
-        }
+
+        float innerCone = cos(spotLightAngle * 0.8);
+        float outerCone = cos(spotLightAngle);
+        spotFactor = saturate((angle - outerCone) / (innerCone - outerCone));
+    }
+    else if (type == LIGHT_TYPE_POINT)
+    {
+        float3 lightToFrag = pin.worldPos - lightPosition;
+        float distance = length(lightToFrag);
+        lightDir = normalize(-lightToFrag);
+        attenuation = 1.0 / (distance * distance);
     }
 
     float diff = max(dot(normal, lightDir), 0.0);

@@ -27,5 +27,5 @@ void Engine::Light::SetDirection(Vector3f direction)
 
 void Engine::Light::SetSpotAngle(float32 angle)
 {
-	m_lightCb.spotLightAngle = angle;
+	m_lightCb.spotLightAngle = angle * (DirectX::XM_PI / 180);
 }
