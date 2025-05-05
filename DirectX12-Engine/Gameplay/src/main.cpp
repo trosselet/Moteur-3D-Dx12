@@ -80,7 +80,7 @@ int main()
 
 	pLightLightComponent.SetType(0);
 	pLightLightComponent.SetColor(Vector3f({ 1.0f, 1.0f, 1.0f }));
-	pLightLightComponent.SetIntensity(5.0f);
+	pLightLightComponent.SetIntensity(10.0f);
 	pLightLightComponent.SetDirection(Vector3f({ -0.0f, -0.5f, -0.3f }));
 
 	/*pLightLightComponent.SetType(1);
