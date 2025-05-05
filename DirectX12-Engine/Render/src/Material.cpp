@@ -13,8 +13,8 @@ Material::Material(PipelineStateObjectManager::PipelineStateConfig* pShader, Ren
     m_lightUploadBuffer(pRender->GetDeviceResources()->GetDevice(), 1, 1)
 {
     m_materialProperties.ambientLightColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-    m_materialProperties.ambientLight = DirectX::XMFLOAT4(0.55f, 0.55f, 0.55f, 1.0f);
-    m_materialProperties.diffuseLight = DirectX::XMFLOAT4(0.25f, 0.25f, 0.25f, 1.0f);
+    m_materialProperties.ambientLight = DirectX::XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+    m_materialProperties.diffuseLight = DirectX::XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
     m_materialProperties.specularLight = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
     m_materialProperties.shininess = 5.0f;
     m_materialProperties.ignoreLighting = false;

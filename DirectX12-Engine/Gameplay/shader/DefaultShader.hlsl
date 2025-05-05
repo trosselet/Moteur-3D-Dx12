@@ -106,10 +106,10 @@ float4 psmain(VertexOut pin) : SV_TARGET
     }
     else if (type == LIGHT_TYPE_POINT)
     {
-        float3 lightToFrag = pin.worldPos - lightPosition;
+        float3 lightToFrag = lightPosition - pin.worldPos;
         float distance = length(lightToFrag);
-        lightDir = normalize(-lightToFrag);
-        attenuation = 1.0 / (distance * distance);
+        lightDir = normalize(lightToFrag);
+        float attenuation = 1.0 / (1.0 + 0.09 * distance + 0.032 * distance * distance);
     }
 
     float NdotL = dot(normal, lightDir);
