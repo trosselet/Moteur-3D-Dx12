@@ -12,6 +12,9 @@
 #include "Window.h"
 #include "GameManager.h"
 
+
+#include <future>
+
 namespace Engine
 {
 	void MeshRenderer::SetRectangle()
@@ -161,28 +164,25 @@ namespace Engine
 
 	void MeshRenderer::SetObjFile(const char* objPath)
 	{
-		Free();
-		GraphicEngine& graphics = *GameManager::GetWindow().GetGraphics();
-
-		m_pGeometry = graphics.CreateGeometryFromObjFile(objPath);
-
-
-		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
-		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
-
-		m_pMesh = graphics.CreateMesh(m_pGeometry);
-		m_pMaterial = graphics.CreateMaterial(m_pShader);
-		m_pMaterial->SetTexture(pTexture);
-
-		m_primitive = true;
+		SetObjFileInternal(objPath, "DefaultTex.dds");
 	}
 
 	void MeshRenderer::SetObjFile(const char* objPath, const char* texturePath)
 	{
+		SetObjFileInternal(objPath, texturePath);
+	}
+
+	void MeshRenderer::SetObjFileInternal(const char* objPath, const char* texturePath)
+	{
 		Free();
 		GraphicEngine& graphics = *GameManager::GetWindow().GetGraphics();
 
-		m_pGeometry = graphics.CreateGeometryFromObjFile(objPath);
+		std::future<Geometry*> futureGeometry = std::async(std::launch::async, [&graphics, objPath]()
+		{
+			return graphics.CreateGeometryFromObjFile(objPath);
+		});
+
+		m_pGeometry = futureGeometry.get();
 
 
 		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");

@@ -33,6 +33,9 @@ namespace Engine
 		void SetObjFile(const char* objPath);
 		void SetObjFile(const char* objPath, const char* texturePath);
 
+		void SetObjFileInternal(const char* objPath, const char* texturePath);
+
+
 		void SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess, bool ingoreLighting = false);
 
 		~MeshRenderer() override;

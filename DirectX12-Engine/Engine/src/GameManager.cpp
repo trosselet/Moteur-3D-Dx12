@@ -5,6 +5,9 @@
 
 #include "Profiler.h"
 
+#include <future>
+#include <optional>
+
 namespace Engine
 {
 	GameManager::GameManager(HINSTANCE hInstance) : 
@@ -37,11 +40,14 @@ namespace Engine
 	{
 		Profiler profiler;
 		
+
+		std::optional<std::future<void>> renderFuture;
+
 		while (m_pWindow->IsOpen())
 		{
 			profiler.NewTask("Window handling messages");
 			m_pWindow->Update();
-			profiler.EndTask(1);
+			profiler.EndTask(1.5);
 
 			m_elapsedTime += m_fixedDeltaTime;
 
@@ -68,13 +74,20 @@ namespace Engine
 			m_pScriptSystem->OnUpdate();
 			profiler.EndTask(0.9);
 
+			if (renderFuture && renderFuture->valid())
+			{
+				renderFuture->get();
+			}
+
 			profiler.NewTask("Draw Global");
-			m_pRenderSystem->HandleRendering();
+			renderFuture = std::async(std::launch::async, [&]()
+				{
+					m_pRenderSystem->HandleRendering();
+				});
 			profiler.EndTask(7);
 
 			system("cls");
 		}
-
 	}
 	
 	void GameManager::HandleCreations()
