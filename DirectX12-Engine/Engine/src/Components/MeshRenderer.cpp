@@ -159,6 +159,42 @@ namespace Engine
 		m_primitive = true;
 	}
 
+	void MeshRenderer::SetObjFile(const char* objPath)
+	{
+		Free();
+		GraphicEngine& graphics = *GameManager::GetWindow().GetGraphics();
+
+		m_pGeometry = graphics.CreateGeometryFromObjFile(objPath);
+
+
+		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
+		Texture* pTexture = graphics.CreateTexture("DefaultTex.dds");
+
+		m_pMesh = graphics.CreateMesh(m_pGeometry);
+		m_pMaterial = graphics.CreateMaterial(m_pShader);
+		m_pMaterial->SetTexture(pTexture);
+
+		m_primitive = true;
+	}
+
+	void MeshRenderer::SetObjFile(const char* objPath, const char* texturePath)
+	{
+		Free();
+		GraphicEngine& graphics = *GameManager::GetWindow().GetGraphics();
+
+		m_pGeometry = graphics.CreateGeometryFromObjFile(objPath);
+
+
+		m_pShader = GameManager::GetRenderSystem().GetShader("../Gameplay/shader/DefaultShader.hlsl");
+		Texture* pTexture = graphics.CreateTexture(texturePath);
+
+		m_pMesh = graphics.CreateMesh(m_pGeometry);
+		m_pMaterial = graphics.CreateMaterial(m_pShader);
+		m_pMaterial->SetTexture(pTexture);
+
+		m_primitive = true;
+	}
+
 	void MeshRenderer::SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess, bool ingoreLighting)
 	{
 		m_pMaterial->SetMaterialProperties(lightColor, ambient, diffuse, specular, shininess, ingoreLighting);

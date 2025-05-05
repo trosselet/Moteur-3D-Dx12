@@ -3,6 +3,7 @@
 #include "DeviceResources.h"
 #include "Window.h"
 #include "PrimitiveFactory.h"
+#include "ObjFactory.h"
 #include "UploadBuffer.h"
 #include "Geometry.h"
 #include "Mesh.h"
@@ -53,6 +54,11 @@ Geometry* GraphicEngine::CreatePrimitiveGeometry(PrimitiveType primitiveType, Co
 	}
 
 	return pResult;
+}
+
+Geometry* GraphicEngine::CreateGeometryFromObjFile(const char* objPath, Color color)
+{
+	return ObjFactory::LoadObjFile(objPath, color);
 }
 
 Mesh* GraphicEngine::CreateMesh(Geometry* pGeometry)

@@ -33,6 +33,7 @@ public:
 	void ResizeWindow(UINT width, UINT height);
 
 	Geometry* CreatePrimitiveGeometry(PrimitiveType primitiveType, Color color = Color::White);
+	Geometry* CreateGeometryFromObjFile(const char* objPath, Color color = Color::White);
 	Mesh* CreateMesh(Geometry* pGeometry);
 	Texture* CreateTexture(char const* filePath);
 	Material* CreateMaterial(PipelineStateObjectManager::PipelineStateConfig* pShader);

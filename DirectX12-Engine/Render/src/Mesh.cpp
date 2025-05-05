@@ -11,6 +11,23 @@ Mesh::Mesh(Geometry* pGeometry, Render* pRender) :
 	UploadGeometry();
 }
 
+Mesh::~Mesh()
+{
+    ReleaseUploadBuffers();
+
+    if (m_pVertexBuffer)
+    {
+        delete m_pVertexBuffer;
+        m_pVertexBuffer = nullptr;
+    }
+
+    if (m_pVertexBuffer)
+    {
+        delete m_pIndexBuffer;
+        m_pIndexBuffer = nullptr;
+    }
+}
+
 void Mesh::UpdateGeometry()
 {
 }

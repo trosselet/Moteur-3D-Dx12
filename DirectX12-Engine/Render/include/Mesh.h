@@ -13,7 +13,7 @@ class Mesh
 {
 public:
     Mesh(Geometry* pGeometry, Render* pRender);
-    ~Mesh() = default;
+    ~Mesh();
 
     void UpdateGeometry(); //Updates geometry in upload buffers
     D3D12_INDEX_BUFFER_VIEW GetIndexBuffer();

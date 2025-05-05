@@ -27,6 +27,7 @@
     <ClInclude Include="include\GraphicEngine.h" />
     <ClInclude Include="include\Material.h" />
     <ClInclude Include="include\Mesh.h" />
+    <ClInclude Include="include\ObjFactory.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\PipelineStateObjectManager.h" />
     <ClInclude Include="include\PrimitiveFactory.h" />
@@ -41,6 +42,7 @@
     <ClCompile Include="src\GraphicEngine.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\ObjFactory.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\PipelineStateObjectManager.cpp" />
     <ClCompile Include="src\PrimitiveFactory.cpp" />

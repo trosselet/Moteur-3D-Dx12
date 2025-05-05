@@ -17,6 +17,8 @@ namespace Engine
 	GameManager::~GameManager()
 	{
 		delete m_pWindow;
+		delete m_pRenderSystem;
+		delete m_pScriptSystem;
 	}
 	
 	void GameManager::GameLoop()
