@@ -9,6 +9,16 @@
 
 namespace Engine
 {
+	Scene::~Scene()
+	{
+		for (GameObject* pGameObject : m_gameObjects)
+		{
+			pGameObject->Destroy();
+		}
+
+		HandleDestruction();
+	}
+
 	Scene& Scene::Create()
 	{
 		std::vector<Scene>& scenes = GameManager::GetScenes();

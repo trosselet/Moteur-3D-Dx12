@@ -31,6 +31,29 @@ Render::Render(Window* const pWindow, uint32 const renderWidth, uint32 const ren
 
 Render::~Render()
 {
+	if (m_pCbCurrentViewProjInstance)
+	{
+		delete m_pCbCurrentViewProjInstance;
+		m_pCbCurrentViewProjInstance = nullptr;
+	}
+	
+	if (m_pCbCurrentLightInstance)
+	{
+		delete m_pCbCurrentLightInstance;
+		m_pCbCurrentLightInstance = nullptr;
+	}
+
+	if (m_pPSOManager)
+	{
+		delete m_pPSOManager;
+		m_pPSOManager = nullptr;
+	}
+
+	if (m_pDeviceResources)
+	{
+		delete m_pDeviceResources;
+		m_pDeviceResources = nullptr;
+	}
 }
 
 DeviceResources* Render::GetDeviceResources()
@@ -95,8 +118,8 @@ bool Render::DrawObject(Mesh* pMesh, Material* pMaterial, DirectX::XMFLOAT4X4 co
 	CopyLightsData();
 	pMaterial->UpdateWorldConstantBuffer(DirectX::XMLoadFloat4x4(&objworldMatrix));
 
-	m_pDeviceResources->GetCommandList()->SetPipelineState(pShader->pipelineState);
-	m_pDeviceResources->GetCommandList()->SetGraphicsRootSignature(pShader->rootSignature);
+	m_pDeviceResources->GetCommandList()->SetPipelineState(pShader->pipelineState.Get());
+	m_pDeviceResources->GetCommandList()->SetGraphicsRootSignature(pShader->rootSignature.Get());
 
 	m_pDeviceResources->GetCommandList()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

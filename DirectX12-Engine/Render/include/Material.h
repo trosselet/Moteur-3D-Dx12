@@ -15,7 +15,7 @@ class Material
 {
 public:
 	Material(PipelineStateObjectManager::PipelineStateConfig* pShader, Render* pRender);
-	~Material() = default;
+	~Material();
 
 	void SetTexture(Texture* pTexture);
 	bool UpdateTexture(int16 position);

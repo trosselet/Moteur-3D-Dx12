@@ -11,7 +11,9 @@
 #include <iostream>
 
 #include <d3d12.h>
+#include <wrl.h>
 
+using Microsoft::WRL::ComPtr;
 
 
 class PipelineStateObjectManager
@@ -20,8 +22,8 @@ public:
     struct PipelineStateConfig
     {
         LPCWSTR shaderPath;
-        ID3D12RootSignature* rootSignature;
-        ID3D12PipelineState* pipelineState;
+        ComPtr<ID3D12RootSignature> rootSignature;
+        ComPtr<ID3D12PipelineState> pipelineState;
     };
 
     struct T_DXGI_INFO
@@ -52,16 +54,15 @@ public:
 
 private:
     void CreateRootSignature(const char* name);
-    ID3DBlob* CompileShader(const std::wstring& path, const char* target);
+    ComPtr<ID3DBlob> CompileShader(const std::wstring& path, const char* target);
 
-private:
     T_DXGI_INFO HlslTypeToDxgiFormat(const std::string& type);
     std::vector<InputLayoutElement> ParseVertexInStruct(const std::string& hlslFilePath);
-    D3D12_INPUT_LAYOUT_DESC CreateInputLayoutDescFromElements(const std::vector<PipelineStateObjectManager::InputLayoutElement>& elements, std::vector<D3D12_INPUT_ELEMENT_DESC>& outDescs);
+    D3D12_INPUT_LAYOUT_DESC CreateInputLayoutDescFromElements(const std::vector<InputLayoutElement>& elements, std::vector<D3D12_INPUT_ELEMENT_DESC>& outDescs);
 
 private:
-    ID3D12Device* m_pDevice;
-    ID3D12RootSignature* m_pRootSignature;
+    ComPtr<ID3D12Device> m_pDevice;
+    ComPtr<ID3D12RootSignature> m_pRootSignature;
     std::unordered_map<std::string, PipelineStateConfig*> m_pipelineStates;
     int shaderPos = 0;
 };

@@ -19,7 +19,7 @@ GraphicEngine::GraphicEngine(Window* pWindow) :
 
 GraphicEngine::~GraphicEngine()
 {
-
+	
 }
 
 void GraphicEngine::BeginFrame()

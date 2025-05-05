@@ -15,6 +15,7 @@
 #include <dxgidebug.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <wrl.h>
 
 //PreCompiled lib files for d12:
 #pragma comment(lib, "dxgi.lib")

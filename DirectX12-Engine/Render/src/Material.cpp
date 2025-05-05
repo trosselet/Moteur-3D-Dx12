@@ -22,6 +22,15 @@ Material::Material(PipelineStateObjectManager::PipelineStateConfig* pShader, Ren
     m_lightUploadBuffer.CopyData(0, m_materialProperties);
 }
 
+Material::~Material()
+{
+    if (m_pTexture)
+    {
+        delete m_pTexture;
+        m_pTexture = nullptr;
+    }
+}
+
 void Material::SetTexture(Texture* pTexture)
 {
     m_pTexture = pTexture;

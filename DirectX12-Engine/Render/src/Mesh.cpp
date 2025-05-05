@@ -1,45 +1,36 @@
 #include "pch.h"
 #include "Mesh.h"
-
 #include "Render.h"
 #include "DeviceResources.h"
 #include "Geometry.h"
 
-Mesh::Mesh(Geometry* pGeometry, Render* pRender) :
-	m_pGeometry(pGeometry), m_pRender(pRender)
+using Microsoft::WRL::ComPtr;
+
+Mesh::Mesh(Geometry* pGeometry, Render* pRender)
+    : m_pGeometry(pGeometry), m_pRender(pRender)
 {
-	UploadGeometry();
+    UploadGeometry();
 }
 
 Mesh::~Mesh()
 {
     ReleaseUploadBuffers();
-
-    if (m_pVertexBuffer)
-    {
-        delete m_pVertexBuffer;
-        m_pVertexBuffer = nullptr;
-    }
-
-    if (m_pVertexBuffer)
-    {
-        delete m_pIndexBuffer;
-        m_pIndexBuffer = nullptr;
-    }
+    // ComPtr will auto-release m_pVertexBufferGPU and m_pIndexBufferGPU
 }
 
 void Mesh::UpdateGeometry()
 {
+    // À implémenter selon besoins
 }
 
 D3D12_INDEX_BUFFER_VIEW Mesh::GetIndexBuffer()
 {
-    return *m_pIndexBuffer;
+    return m_indexBuffer;
 }
 
 D3D12_VERTEX_BUFFER_VIEW Mesh::GetVertexBuffer()
 {
-    return *m_pVertexBuffer;
+    return m_vertexBuffer;
 }
 
 UINT Mesh::GetIndexCount()
@@ -49,17 +40,8 @@ UINT Mesh::GetIndexCount()
 
 void Mesh::ReleaseUploadBuffers()
 {
-	if (m_pIndexBufferUploader)
-	{
-        m_pIndexBufferUploader->Release();
-        m_pIndexBufferUploader = nullptr;
-	}
-	
-	if (m_pVertexBufferUploader)
-	{
-        m_pVertexBufferUploader->Release();
-		m_pVertexBufferUploader = nullptr;
-	}
+    m_pIndexBufferUploader.Reset();
+    m_pVertexBufferUploader.Reset();
 }
 
 void Mesh::UploadGeometry()
@@ -142,17 +124,11 @@ void Mesh::UploadBuffers(float32* vertices, UINT vertexCount, uint32* indices, U
         D3D12_RESOURCE_STATE_INDEX_BUFFER
     );
 
-    D3D12_VERTEX_BUFFER_VIEW vertexView = {};
-    vertexView.BufferLocation = m_pVertexBufferGPU->GetGPUVirtualAddress();
-    vertexView.StrideInBytes = sizeof(float32) * floatStride;
-    vertexView.SizeInBytes = vertexBufferSize;
-    m_pVertexBuffer = new D3D12_VERTEX_BUFFER_VIEW(vertexView);
+    m_vertexBuffer.BufferLocation = m_pVertexBufferGPU->GetGPUVirtualAddress();
+    m_vertexBuffer.StrideInBytes = sizeof(float32) * floatStride;
+    m_vertexBuffer.SizeInBytes = vertexBufferSize;
 
-    D3D12_INDEX_BUFFER_VIEW indexView = {};
-    indexView.BufferLocation = m_pIndexBufferGPU->GetGPUVirtualAddress();
-    indexView.Format = DXGI_FORMAT_R32_UINT;
-    indexView.SizeInBytes = indexBufferSize;
-    m_pIndexBuffer = new D3D12_INDEX_BUFFER_VIEW(indexView);
+    m_indexBuffer.BufferLocation = m_pIndexBufferGPU->GetGPUVirtualAddress();
+    m_indexBuffer.Format = DXGI_FORMAT_R32_UINT;
+    m_indexBuffer.SizeInBytes = indexBufferSize;
 }
-
-

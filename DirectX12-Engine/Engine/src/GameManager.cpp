@@ -19,6 +19,16 @@ namespace Engine
 		delete m_pWindow;
 		delete m_pRenderSystem;
 		delete m_pScriptSystem;
+
+		IDXGIDebug1* debug = nullptr;
+
+		if (DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)) == S_OK)
+		{
+			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+			debug->Release();
+			debug = nullptr;
+		}
+
 	}
 	
 	void GameManager::GameLoop()

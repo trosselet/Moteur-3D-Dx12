@@ -208,14 +208,24 @@ namespace Engine
 	void MeshRenderer::Free()
 	{
 		if (m_primitive == false) return;
-		delete m_pGeometry;
-		delete m_pMaterial;
-		delete m_pMesh;
-		delete m_pShader;
-		m_pGeometry = nullptr;
-		m_pMaterial = nullptr;
-		m_pMesh = nullptr;
-		m_pShader = nullptr;
+		
+		if (m_pGeometry)
+		{
+			delete m_pGeometry;
+			m_pGeometry = nullptr;
+		}
+
+		if (m_pMaterial)
+		{
+			delete m_pMaterial;
+			m_pMaterial = nullptr;
+		}
+
+		if (m_pMesh)
+		{
+			delete m_pMesh;
+			m_pMesh = nullptr;
+		}
 		m_primitive = false;
 	}
 }

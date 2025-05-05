@@ -5,6 +5,8 @@
 
 #include "Define.h"
 
+#include <wrl.h>
+
 struct Geometry;
 
 class Render;
@@ -32,14 +34,13 @@ private:
     UINT m_vertexCount;
     UINT m_indexCount;
 
-    ID3D12Resource* m_pVertexBufferUploader;
-    ID3D12Resource* m_pIndexBufferUploader;
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_pVertexBufferUploader;
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_pIndexBufferUploader;
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_pVertexBufferGPU;
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_pIndexBufferGPU;
 
-    ID3D12Resource* m_pVertexBufferGPU;
-    ID3D12Resource* m_pIndexBufferGPU;
-
-    D3D12_VERTEX_BUFFER_VIEW* m_pVertexBuffer;
-    D3D12_INDEX_BUFFER_VIEW* m_pIndexBuffer;
+    D3D12_VERTEX_BUFFER_VIEW m_vertexBuffer = {};
+    D3D12_INDEX_BUFFER_VIEW m_indexBuffer = {};
 };
 
 

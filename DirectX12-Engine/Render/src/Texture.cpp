@@ -4,33 +4,29 @@
 #include "DeviceResources.h"
 #include "GraphicEngine.h"
 
-
-Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
-    m_width(0), m_height(0), m_srvHeapDesc(), m_textureAddress()
+Texture::Texture(int8 const* path, GraphicEngine* pGraphic)
 {
-
-    HRESULT hr = NULL;
-
     std::string filePath = "../Gameplay/texture/" + std::string(reinterpret_cast<const char*>(path));
-
     std::wstring wFilePath(filePath.begin(), filePath.end());
 
-    hr = DirectX::CreateDDSTextureFromFile12(pGraphic->GetRender()->GetDeviceResources()->GetDevice(),
-         pGraphic->GetRender()->GetDeviceResources()->GetCommandList(),
-         wFilePath.c_str(),
-         &m_pTexture,
-         &m_pTextureUploadHeap,
-         m_width,
-         m_height);
+    HRESULT hr = DirectX::CreateDDSTextureFromFile12(
+        pGraphic->GetRender()->GetDeviceResources()->GetDevice(),
+        pGraphic->GetRender()->GetDeviceResources()->GetCommandList(),
+        wFilePath.c_str(),
+        &m_pTexture,
+        &m_pTextureUploadHeap,
+        m_width,
+        m_height
+    );
 
-    if (hr != S_OK)
+    if (FAILED(hr))
     {
-        PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to load texture. HRESULT: " << hr << ", mTexture : " << m_pTexture << "\n");
+        PRINT_CONSOLE_OUTPUT("[RENDER]: Failed to load texture. HRESULT: " << hr << "\n");
         return;
     }
-    
+
     UINT descriptorIndex = pGraphic->GetRender()->GetDeviceResources()->AllocateSRVHeapIndex();
-    
+
     UINT size = pGraphic->GetRender()->GetDeviceResources()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle = pGraphic->GetRender()->GetDeviceResources()->GetCbvSrvUavDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
@@ -47,7 +43,8 @@ Texture::Texture(int8 const* path, GraphicEngine* pGraphic) :
     D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = pGraphic->GetRender()->GetDeviceResources()->GetCbvSrvUavDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
     gpuHandle.ptr += static_cast<SIZE_T>(descriptorIndex) * size;
 
-    pGraphic->GetRender()->GetDeviceResources()->GetDevice()->CreateShaderResourceView(m_pTexture, &srvDesc, descriptorHandle);
+    pGraphic->GetRender()->GetDeviceResources()->GetDevice()->CreateShaderResourceView(
+        m_pTexture.Get(), &srvDesc, descriptorHandle);
 
     m_textureAddress = gpuHandle;
 }

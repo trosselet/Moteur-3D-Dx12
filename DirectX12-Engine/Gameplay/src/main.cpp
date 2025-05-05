@@ -30,40 +30,40 @@ int main()
 	Engine::MeshRenderer& pBasePlateformMeshRendererTest = pBasePlateform->AddComponent<Engine::MeshRenderer>();
 	pBasePlateformMeshRendererTest.SetCube("grid_placeholder_material.dds");
 	pBasePlateform->SetName("BasePlateform");
-
-	Engine::GameObject* const pCircle = new Engine::GameObject(scene);
+	
+	/*Engine::GameObject* const pCircle = new Engine::GameObject(scene);
 	pCircle->m_pTransform->SetPosition({ 0.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pCircleMeshRendererTest = pCircle->AddComponent<Engine::MeshRenderer>();
 	pCircleMeshRendererTest.SetCircle("grid_placeholder_material.dds");
 	pCircle->SetName("Circle");
-
+	
 	Engine::GameObject* const pRectangle = new Engine::GameObject(scene);
 	pRectangle->m_pTransform->SetPosition({ 1.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pRectangleMeshRendererTest = pRectangle->AddComponent<Engine::MeshRenderer>();
 	pRectangleMeshRendererTest.SetRectangle("grid_placeholder_material.dds");
 	pRectangle->SetName("Rectangle");
-
-	/*Engine::GameObject* const pCube = new Engine::GameObject(scene);
+	
+	Engine::GameObject* const pCube = new Engine::GameObject(scene);
 	pCube->m_pTransform->SetPosition({ -1.0f, 0.0f, 5.0f });
 	Engine::MeshRenderer& pCubeMeshRendererTest = pCube->AddComponent<Engine::MeshRenderer>();
 	pCubeMeshRendererTest.SetCube("grid_placeholder_material.dds");
-	pCube->SetName("Cube");*/
-
-	/*Engine::GameObject* const pSuzanne = new Engine::GameObject(scene);
+	pCube->SetName("Cube");
+	
+	Engine::GameObject* const pSuzanne = new Engine::GameObject(scene);
 	pSuzanne->m_pTransform->SetPosition({ -2.0f, 0.0f, 5.0f });
 	pSuzanne->m_pTransform->Scale({ 0.5f, 0.5f, 0.5f });
 	pSuzanne->m_pTransform->RotateYPR({ 3.2f, 0.0f, 0.0f });
 	Engine::MeshRenderer& pSuzanneMeshRendererTest = pSuzanne->AddComponent<Engine::MeshRenderer>();
 	pSuzanneMeshRendererTest.SetObjFile("suzanne.obj", "wood.dds");
-	pSuzanne->SetName("Suzanne");*/
-
-	/*Engine::GameObject* const pSpaceShip = new Engine::GameObject(scene);
+	pSuzanne->SetName("Suzanne");
+	
+	Engine::GameObject* const pSpaceShip = new Engine::GameObject(scene);
 	pSpaceShip->m_pTransform->SetPosition({ 3.0f, 0.0f, 5.0f });
 	pSpaceShip->m_pTransform->Scale({ 0.1f, 0.1f, 0.1f });
 	pSpaceShip->m_pTransform->RotateYPR({ 3.2f, 0.0f, 0.0f });
 	Engine::MeshRenderer& pSpaceShipMeshRendererTest = pSpaceShip->AddComponent<Engine::MeshRenderer>();
 	pSpaceShipMeshRendererTest.SetObjFile("spaceship.obj");
-	pSpaceShip->SetName("Suzanne");*/
+	pSpaceShip->SetName("Suzanne");
 
 	Engine::GameObject* const pSkyBox = new Engine::GameObject(scene);
 	pSkyBox->m_pTransform->SetPosition({ -1.0f, 0.0f, 5.0f });
@@ -71,7 +71,7 @@ int main()
 	Engine::MeshRenderer& pSkyBoxMeshRendererTest = pSkyBox->AddComponent<Engine::MeshRenderer>();
 	pSkyBoxMeshRendererTest.SetSphere("sky.dds");
 	pSkyBoxMeshRendererTest.SetMaterialProperties(Vector<float32, 4>({ 1.0f,1.0f,1.0f,1.0f }), Vector<float32, 4>({ 1.0f,1.0f,1.0f,1.0f }), Vector<float32, 4>({ 0.0f,0.0f,0.0f,1.0f }), Vector<float32, 4>({ 0.0f,0.0f,0.0,1.0f }), 1.0f, true);
-	pSkyBox->SetName("SkyBox");
+	pSkyBox->SetName("SkyBox");*/
 
 	Engine::GameObject* const pLight = new Engine::GameObject(scene);
 	pLight->m_pTransform->SetPosition({ 0, 3.0f, 5.0f });

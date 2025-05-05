@@ -19,7 +19,7 @@ namespace Engine
 	{
 	public:
 		Scene() = default;
-		~Scene() = default;
+		~Scene();
 
 		static Scene& Create();
 		void Load();

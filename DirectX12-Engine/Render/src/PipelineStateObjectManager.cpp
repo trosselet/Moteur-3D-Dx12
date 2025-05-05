@@ -10,32 +10,9 @@ PipelineStateObjectManager::~PipelineStateObjectManager()
 {
     for (auto& pso : m_pipelineStates)
     {
-        if (pso.second)
-        {
-            if (pso.second->pipelineState)
-            {
-                pso.second->pipelineState->Release();
-                pso.second->pipelineState = nullptr;
-            }
-
-            if (pso.second->rootSignature)
-            {
-                pso.second->rootSignature->Release();
-                pso.second->rootSignature = nullptr;
-            }
-
-            delete pso.second;
-        }
+        delete pso.second;
     }
     m_pipelineStates.clear();
-
-    if (m_pRootSignature)
-    {
-        m_pRootSignature->Release();
-        m_pRootSignature = nullptr;
-    }
-
-    m_pDevice = nullptr;
 }
 
 void PipelineStateObjectManager::Initialize(ID3D12Device* device)
@@ -47,31 +24,33 @@ void PipelineStateObjectManager::CreatePipelineState(const char* name, const std
 {
     if (!m_pDevice)
     {
-        PRINT_CONSOLE_OUTPUT("[RENDER] Error: PSO device was not initialized ! \n")
+        PRINT_CONSOLE_OUTPUT("[RENDER] Error: PSO device was not initialized ! \n");
+        return;
     }
 
-    ID3DBlob* vsBlob = CompileShader(shaderPath, "vs_5_0");
-    ID3DBlob* psBlob = CompileShader(shaderPath, "ps_5_0");
+    ComPtr<ID3DBlob> vsBlob = CompileShader(shaderPath, "vs_5_0");
+    ComPtr<ID3DBlob> psBlob = CompileShader(shaderPath, "ps_5_0");
 
     CreateRootSignature(name);
 
     std::string shaderPathStr(shaderPath.begin(), shaderPath.end());
-    std::vector<InputLayoutElement> inputLayoutElements = ParseVertexInStruct(shaderPathStr);
+    auto inputLayoutElements = ParseVertexInStruct(shaderPathStr);
 
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs;
-    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = CreateInputLayoutDescFromElements(inputLayoutElements, inputElementDescs);
+    auto inputLayoutDesc = CreateInputLayoutDescFromElements(inputLayoutElements, inputElementDescs);
 
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.InputLayout = inputLayoutDesc;
+    psoDesc.pRootSignature = m_pRootSignature.Get();
+    psoDesc.VS = { vsBlob->GetBufferPointer(), vsBlob->GetBufferSize() };
+    psoDesc.PS = { psBlob->GetBufferPointer(), psBlob->GetBufferSize() };
+    
+    
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
     depthStencilDesc.DepthEnable = TRUE;
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
     depthStencilDesc.StencilEnable = FALSE;
-
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-    psoDesc.InputLayout = inputLayoutDesc;
-    psoDesc.pRootSignature = m_pRootSignature;
-    psoDesc.VS = { vsBlob->GetBufferPointer(), vsBlob->GetBufferSize() };
-    psoDesc.PS = { psBlob->GetBufferPointer(), psBlob->GetBufferSize() };
 
     psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
     psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
@@ -103,24 +82,19 @@ void PipelineStateObjectManager::CreatePipelineState(const char* name, const std
     psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     psoDesc.SampleDesc.Count = 1;
 
-    ID3D12PipelineState* pso = nullptr;
-
-    if (m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pso)) != S_OK)
+    ComPtr<ID3D12PipelineState> pso;
+    if (FAILED(m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pso))))
     {
         PRINT_CONSOLE_OUTPUT("[RENDER]: Error failed to create pso ! \n");
+        return;
     }
 
-    PipelineStateConfig* psoConfig = new PipelineStateConfig();
-    m_pRootSignature->AddRef();
-    psoConfig->rootSignature = m_pRootSignature;
-    psoConfig->pipelineState = pso;
-    psoConfig->shaderPath = shaderPath.c_str();
+    PipelineStateObjectManager::PipelineStateConfig* config = new PipelineStateConfig();
+    config->shaderPath = shaderPath.c_str();
+    config->pipelineState = pso;
+    config->rootSignature = m_pRootSignature;
 
-    m_pipelineStates[name] = psoConfig;
-
-    vsBlob->Release();
-    psBlob->Release();
-
+    m_pipelineStates[name] = config;
 }
 
 int PipelineStateObjectManager::GetShaderPosition()
@@ -222,53 +196,30 @@ void PipelineStateObjectManager::CreateRootSignature(const char* name)
 }
 
 
-ID3DBlob* PipelineStateObjectManager::CompileShader(const std::wstring& path, const char* target)
+ComPtr<ID3DBlob> PipelineStateObjectManager::CompileShader(const std::wstring& path, const char* target)
 {
     UINT flags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE_ALL_RESOURCES_BOUND;
 
-    const char* entryPoint = "";
+    const char* entryPoint = (!target || strcmp(target, "vs_5_0") != 0) ? "psmain" : "vsmain";
 
-    if (!target)
-        return nullptr;
-
-    if (strcmp(target, "vs_5_0") == 0)
-    {
-        entryPoint = "vsmain";
-    }
-    else
-    {
-        entryPoint = "psmain";
-    }
-    ID3DBlob* compiledShader = nullptr;
-    ID3DBlob* errorBlob = nullptr;
+    ComPtr<ID3DBlob> compiledShader;
+    ComPtr<ID3DBlob> errorBlob;
 
     HRESULT hr = D3DCompileFromFile(path.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, target, flags, 0, &compiledShader, &errorBlob);
-    
-    if (hr != S_OK)
+
+    if (FAILED(hr))
     {
-        //If error code = -2147024893 error path
-        //Can be checked with programmer calculator in DEC row to translate in HEX
         PRINT_CONSOLE_OUTPUT("Shader loading error was: " << hr << ", for shader :" << path << "\n");
-
-        if (compiledShader)
+        if (errorBlob)
         {
-            compiledShader->Release();
-            compiledShader = nullptr;
+            PRINT_CONSOLE_OUTPUT("Shader compilation error: " << (const char*)errorBlob->GetBufferPointer() << ", for shader :" << path << "\n");
         }
-
-    }
-
-    if (errorBlob)
-    {
-        PRINT_CONSOLE_OUTPUT("Shader compliation error: " << (const char*)errorBlob->GetBufferPointer() << ", for shader :" << path << "\n");
-        errorBlob->Release();
-        errorBlob = nullptr;
         return nullptr;
     }
 
     return compiledShader;
-
 }
+
 
 PipelineStateObjectManager::T_DXGI_INFO PipelineStateObjectManager::HlslTypeToDxgiFormat(const std::string& type)
 {
