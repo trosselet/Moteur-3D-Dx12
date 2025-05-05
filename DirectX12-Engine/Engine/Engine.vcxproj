@@ -28,6 +28,7 @@
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\IScript.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Profiler.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\ScriptSystem.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\IScript.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Profiler.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Systems\ScriptSystem.cpp" />

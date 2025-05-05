@@ -3,6 +3,8 @@
 
 #include "GraphicEngine.h"
 
+#include "Profiler.h"
+
 namespace Engine
 {
 	GameManager::GameManager(HINSTANCE hInstance) : 
@@ -33,24 +35,44 @@ namespace Engine
 	
 	void GameManager::GameLoop()
 	{
+		Profiler profiler;
+		
 		while (m_pWindow->IsOpen())
 		{
+			profiler.NewTask("Window handling messages");
 			m_pWindow->Update();
+			profiler.EndTask(1);
 
 			m_elapsedTime += m_fixedDeltaTime;
 
+
+			profiler.NewTask("GameManager handling Creations");
 			HandleCreations();
+			profiler.EndTask(0.8);
+
+			profiler.NewTask("GameManager handling Deletions");
 			HandleDeletions();
+			profiler.EndTask(0.8);
 
 			while (m_elapsedTime >= m_fixedDeltaTime)
 			{
+				profiler.NewTask("FixedUpdate script system");
 				m_pScriptSystem->OnFixedUpdate();
+				profiler.EndTask(0.9);
+				
+				
 				m_elapsedTime -= m_fixedDeltaTime;
 			}
 
+			profiler.NewTask("Update script system");
 			m_pScriptSystem->OnUpdate();
-			m_pRenderSystem->HandleRendering();
+			profiler.EndTask(0.9);
 
+			profiler.NewTask("Draw Global");
+			m_pRenderSystem->HandleRendering();
+			profiler.EndTask(7);
+
+			system("cls");
 		}
 
 	}
