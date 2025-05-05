@@ -41,7 +41,8 @@ struct MaterialProperties : ConstantBuffer
     DirectX::XMFLOAT4 specularLight;
 
     float32 shininess;
-    float32 padding[3];
+    int32 ignoreLighting;
+    float32 padding[2];
 
 };
 

@@ -41,7 +41,8 @@ cbuffer cbMaterial : register(b2)
     float4 diffuseLight;
     float4 specularLight;
     float shininess;
-    float padding[3];
+    int ignoreLighting;
+    float padding[2];
 };
 
 cbuffer cbLight : register(b3)
@@ -77,6 +78,13 @@ float4 psmain(VertexOut pin) : SV_TARGET
     float3 lightDir = float3(0.0f, -1.0f, 0.0f);
     float attenuation = 1.0;
     float spotFactor = 1.0;
+    
+    if (ignoreLighting == 1)
+    {
+        float4 texColor = gTexture.Sample(gSampler, pin.texcoord);
+        float3 finalColor = texColor.rgb * ambient * pin.color.rgb;
+        return float4(finalColor, texColor.a * pin.color.a);
+    }
 
     if (type == LIGHT_TYPE_DIRECTIONAL)
     {
@@ -104,14 +112,24 @@ float4 psmain(VertexOut pin) : SV_TARGET
         attenuation = 1.0 / (distance * distance);
     }
 
-    float diff = max(dot(normal, lightDir), 0.0);
-    float3 diffuse = diffuseLight.rgb * diff * lightColor.rgb;
+    float NdotL = dot(normal, lightDir);
+    float3 lighting;
 
-    float3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(reflectDir, viewDir), 0.0), shininess);
-    float3 specular = specularLight.rgb * spec * lightColor.rgb;
+    if (NdotL <= 0.0)
+    {
+        lighting = ambient * 0.6;
+    }
+    else
+    {
+        float diff = NdotL;
+        float3 diffuse = diffuseLight.rgb * diff * lightColor.rgb;
 
-    float3 lighting = ambient + (diffuse + specular) * intensity * attenuation * spotFactor;
+        float3 reflectDir = reflect(-lightDir, normal);
+        float spec = pow(max(dot(reflectDir, viewDir), 0.0), shininess);
+        float3 specular = specularLight.rgb * spec * lightColor.rgb;
+
+        lighting = ambient + (diffuse + specular) * intensity * attenuation * spotFactor;
+    }
 
     float4 texColor = gTexture.Sample(gSampler, pin.texcoord);
     float3 finalColor = texColor.rgb * lighting * pin.color.rgb;

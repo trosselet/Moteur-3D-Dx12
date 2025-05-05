@@ -158,6 +158,11 @@ namespace Engine
 
 		m_primitive = true;
 	}
+
+	void MeshRenderer::SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess, bool ingoreLighting)
+	{
+		m_pMaterial->SetMaterialProperties(lightColor, ambient, diffuse, specular, shininess, ingoreLighting);
+	}
 	
 	MeshRenderer::~MeshRenderer()
 	{

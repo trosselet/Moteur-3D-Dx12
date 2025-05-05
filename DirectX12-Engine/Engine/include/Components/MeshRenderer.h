@@ -3,8 +3,8 @@
 
 
 #include "Define.h"
-#include "ComponentBase.h"
 #include "Vector.hpp"
+#include "ComponentBase.h"
 
 #include "PipelineStateObjectManager.h"
 
@@ -29,6 +29,8 @@ namespace Engine
 
 		void SetCube();
 		void SetCube(const char* texturePath);
+
+		void SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess, bool ingoreLighting = false);
 
 		~MeshRenderer() override;
 

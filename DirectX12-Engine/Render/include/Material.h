@@ -20,7 +20,7 @@ public:
 	void SetTexture(Texture* pTexture);
 	bool UpdateTexture(int16 position);
 	
-	void SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess);
+	void SetMaterialProperties(Vector<float32, 4> lightColor, Vector<float32, 4> ambient, Vector<float32, 4> diffuse, Vector<float32, 4> specular, float32 shininess, bool ingoreLighting);
 
 	Texture* GetTexture();
 	PipelineStateObjectManager::PipelineStateConfig* GetShader();
