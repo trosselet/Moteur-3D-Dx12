@@ -4,6 +4,7 @@
 #include "GraphicEngine.h"
 
 #include "Profiler.h"
+#include "AudioManager.h"
 
 #include <future>
 #include <optional>
@@ -13,10 +14,13 @@ namespace Engine
 	GameManager::GameManager(HINSTANCE hInstance) : 
 		m_pWindow(new Window(hInstance, Vector2i{ 1920, 1080 }, "GameEngine")),
 		m_pRenderSystem(new RenderSystem()),
-		m_pScriptSystem(new ScriptSystem())
+		m_pScriptSystem(new ScriptSystem()),
+		m_pAudioSystem( new AudioSystem() )
 	{
 		m_pRenderSystem->m_pGraphics = m_pWindow->GetGraphics();
 		m_pRenderSystem->m_pRender = m_pWindow->GetGraphics()->GetRender();
+
+		Engine::AudioManager::GetInstance().Initialize();
 	}
 
 	GameManager::~GameManager()
@@ -24,6 +28,9 @@ namespace Engine
 		delete m_pWindow;
 		delete m_pRenderSystem;
 		delete m_pScriptSystem;
+		delete m_pAudioSystem;
+
+		Engine::AudioManager::GetInstance().Shutdown();
 
 		IDXGIDebug1* debug = nullptr;
 
@@ -42,6 +49,7 @@ namespace Engine
 		
 
 		std::optional<std::future<void>> renderFuture;
+		std::optional<std::future<void>> audioFuture;
 
 		while (m_pWindow->IsOpen())
 		{
@@ -85,6 +93,13 @@ namespace Engine
 					m_pRenderSystem->HandleRendering();
 				});
 			profiler.EndTask(7);
+			
+			profiler.NewTask("Audio Global");
+			renderFuture = std::async(std::launch::async, [&]()
+				{
+					m_pAudioSystem->UpdateAudio();
+				});
+			profiler.EndTask(10);
 
 			system("cls");
 		}

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AudioManager.h" />
+    <ClInclude Include="include\Components\AudioComponent.h" />
     <ClInclude Include="include\Components\Camera.h" />
     <ClInclude Include="include\Components\Component.h" />
     <ClInclude Include="include\Components\ComponentBase.h" />
@@ -30,10 +32,13 @@
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\Profiler.h" />
     <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\Systems\AudioSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\ScriptSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioManager.cpp" />
+    <ClCompile Include="src\Components\AudioComponent.cpp" />
     <ClCompile Include="src\Components\Component.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Components\MeshRenderer.cpp" />
@@ -43,6 +48,7 @@
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Profiler.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Systems\ScriptSystem.cpp" />
   </ItemGroup>

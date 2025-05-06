@@ -1,5 +1,5 @@
-#ifndef ROTATE__H
-#define ROTATE__H
+#ifndef CAMERAMOVEMENT__H
+#define CAMERAMOVEMENT__H
 
 #include "IScript.h"
 
@@ -18,4 +18,4 @@ private:
 };
 
 
-#endif // !ROTATE__H
+#endif // !CAMERAMOVEMENT__H

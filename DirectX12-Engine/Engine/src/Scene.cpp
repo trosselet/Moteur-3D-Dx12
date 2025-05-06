@@ -97,11 +97,29 @@ namespace Engine
 			GameManager::GetWindow().GetGraphics()->AddLight(&pLight->m_lightCb);
 		}
 		m_lightsToCreate.clear();
+		
+		for (AudioComponent* const pAudioComponent : m_audioComponentToCreate)
+		{
+			pAudioComponent->m_toBeCreated = false;
+			pAudioComponent->m_created = true;
+
+			GameManager::GetAudioSystem().m_audioComponents.push_back(pAudioComponent);
+		}
+		m_audioComponentToCreate.clear();
 
 	}
 
 	void Scene::HandleDestruction()
 	{
+		for (uint16 i = 0; i < m_audioComponents.size(); i++)
+		{
+			AudioComponent* const pAudio = m_audioComponents[i];
+			if (pAudio->m_toBeDeleted == false) continue;
+
+			m_audioComponents.erase(m_audioComponents.begin() + i);
+			delete pAudio;
+		}
+
 		for (uint16 i = 0; i < m_lights.size(); i++)
 		{
 			Light* const pLight = m_lights[i];

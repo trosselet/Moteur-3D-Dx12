@@ -8,11 +8,10 @@
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Components/Light.h"
+#include "Components/AudioComponent.h"
 
 #include "IScript.h"
 #include "Systems/ScriptSystem.h"
-
-#include "GameObject.h"
 
 #include "Scene.h"
 
@@ -110,6 +109,21 @@ namespace Engine
 		return nullptr;
 	}
 
+	template <>
+	inline AudioComponent& GameObject::AddComponent<AudioComponent>()
+	{
+		assert((HasComponent<AudioComponent>() == false));
+
+		AudioComponent* const pAudioComponent = new AudioComponent();
+		m_pScene->m_audioComponents.push_back(pAudioComponent);
+		pAudioComponent->m_pOwner = this;
+		m_pScene->m_audioComponentToCreate.push_back(pAudioComponent);
+
+		m_components[AudioComponent::Tag] = pAudioComponent;
+		m_componentBitmask |= 1 << (AudioComponent::Tag - 1);
+
+		return *pAudioComponent;
+	}
 
 	template <>
 	inline MeshRenderer& GameObject::AddComponent<MeshRenderer>()
@@ -161,12 +175,18 @@ namespace Engine
 	}
 
 	template <>
+	inline void GameObject::RemoveComponent<AudioComponent>()
+	{
+		assert(HasComponent<AudioComponent>());
+		m_components[AudioComponent::Tag]->Destroy();
+	}
+
+	template <>
 	inline void GameObject::RemoveComponent<MeshRenderer>()
 	{
 		assert(HasComponent<MeshRenderer>());
 		m_components[MeshRenderer::Tag]->Destroy();
 	}
-
 
 	template <>
 	inline void GameObject::RemoveComponent<Camera>()

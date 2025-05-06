@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Systems/RenderSystem.h"
 #include "Systems/ScriptSystem.h"
+#include "Systems/AudioSystem.h"
 #include "Window.h"
 
 namespace Engine
@@ -24,6 +25,7 @@ namespace Engine
 
 		static RenderSystem& GetRenderSystem();
 		static ScriptSystem& GetScriptSystem() { return *m_pInstance->m_pScriptSystem; }
+		static AudioSystem& GetAudioSystem() { return *m_pInstance->m_pAudioSystem; }
 
 		static Window& GetWindow() { return *m_pInstance->m_pWindow; };
 
@@ -40,6 +42,7 @@ namespace Engine
 		Window* m_pWindow = nullptr;
 		RenderSystem* m_pRenderSystem = nullptr;
 		ScriptSystem* m_pScriptSystem = nullptr;
+		AudioSystem* m_pAudioSystem = nullptr;
 
 		std::vector<Scene>  m_scenes;
 		std::vector<Scene*> m_loadedScenes;

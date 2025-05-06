@@ -22,6 +22,7 @@ namespace Engine
             Camera,
             Light,
             Shot,
+            Audio,
         };
 
         void Destroy();

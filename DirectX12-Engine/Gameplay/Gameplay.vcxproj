@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Scripts\CameraMovement.cpp" />
+    <ClCompile Include="src\Scripts\PlayMusic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader\DefaultShader.hlsl">
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Scripts\CameraMovement.h" />
+    <ClInclude Include="include\Scripts\PlayMusic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

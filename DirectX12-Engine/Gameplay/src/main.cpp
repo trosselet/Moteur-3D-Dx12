@@ -1,6 +1,7 @@
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Components/Light.h"
+#include "Components/AudioComponent.h"
 
 #include "GameObject.h"
 #include "Scene.h"
@@ -8,6 +9,8 @@
 #include "GameManager.h"
 
 #include "Scripts/CameraMovement.h"
+#include "Scripts/PlayMusic.h"
+
 
 int main()
 {
@@ -95,6 +98,16 @@ int main()
 	pLightLightComponent.SetPosition(Vector3f({ 0.0f, 0.5f, 10.0f }));
 	pLightLightComponent.SetIntensity(0.5f);*/
 
+	Engine::GameObject* const pAudio = new Engine::GameObject(scene);
+	pAudio->m_pTransform->SetPosition({ 0.0f, 0.0f, 0.0f });
+	Engine::AudioComponent& pAudioComponent = pAudio->AddComponent<Engine::AudioComponent>();
+	//pAudioComponent.SetStereo(true);
+	pAudio->AddScript<PlayMusic>("music.wav");
+
+	/*Engine::GameObject* const pAudio2 = new Engine::GameObject(scene);
+	pAudio2->m_pTransform->SetPosition({ 0.0f, 0.0f, 0.0f });
+	Engine::AudioComponent& ppAudio2Component = pAudio2->AddComponent<Engine::AudioComponent>();
+	pAudio2->AddScript<PlayMusic>("sound.wav");*/
 
 	Engine::GameManager::Run();
 	Engine::GameManager::Release();

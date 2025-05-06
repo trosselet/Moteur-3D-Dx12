@@ -21,6 +21,9 @@
     <ClCompile Include="src\Scripts\CameraMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripts\PlayMusic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader\DefaultShader.hlsl">
@@ -29,6 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Scripts\CameraMovement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scripts\PlayMusic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

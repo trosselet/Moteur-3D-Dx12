@@ -9,7 +9,7 @@ Geometry* ObjFactory::LoadObjFile(const char* filePath, Color color)
 {
     Geometry* pGeometry = new Geometry();
 
-    std::string path = "../Gameplay/obj/" + std::string(filePath);
+    std::string path = "../Gameplay/object/" + std::string(filePath);
 
     std::ifstream file(path);
     std::string line;

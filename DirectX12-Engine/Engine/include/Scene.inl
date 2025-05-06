@@ -16,12 +16,15 @@ namespace Engine
 	inline std::vector<MeshRenderer*> const& Scene::GetMeshRenderers() const { return m_meshRenderers; }
 	inline std::vector<Camera*> const& Scene::GetCameras() const { return m_cameras; }
 	inline std::vector<Light*> const& Scene::GetLights() const { return m_lights; }
+	inline std::vector<AudioComponent*> const& Scene::GetAudioComponents() const { return m_audioComponents; }
+
 
 
 	inline std::vector<GameObject*>& Scene::GetGameObjects() { return m_gameObjects; }
 	inline std::vector<MeshRenderer*>& Scene::GetMeshRenderers() { return m_meshRenderers; }
 	inline std::vector<Camera*>& Scene::GetCameras() { return m_cameras; }
 	inline std::vector<Light*>& Scene::GetLights() { return m_lights; }
+	inline std::vector<AudioComponent*>& Scene::GetAudioComponents() { return m_audioComponents; }
 }
 
 

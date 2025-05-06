@@ -8,6 +8,7 @@
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Components/Light.h"
+#include "Components/AudioComponent.h"
 
 
 
@@ -36,12 +37,14 @@ namespace Engine
 		std::vector<MeshRenderer*> const& GetMeshRenderers() const;
 		std::vector<Camera*> const& GetCameras() const;
 		std::vector<Light*> const& GetLights() const;
+		std::vector<AudioComponent*> const& GetAudioComponents() const;
 
 
 		std::vector<GameObject*>& GetGameObjects();
 		std::vector<MeshRenderer*>& GetMeshRenderers();
 		std::vector<Camera*>& GetCameras();
 		std::vector<Light*>& GetLights();
+		std::vector<AudioComponent*>& GetAudioComponents();
 
 		void HandleCreation();
 		void HandleDestruction();
@@ -60,18 +63,21 @@ namespace Engine
 		std::vector<MeshRenderer*> m_meshRenderers;
 		std::vector<Camera*> m_cameras;
 		std::vector<Light*> m_lights;
+		std::vector<AudioComponent*> m_audioComponents;
 
 
 		std::vector<GameObject*> m_gameObjectsToCreate;
 		std::vector<MeshRenderer*> m_meshRenderersToCreate;
 		std::vector<Camera*> m_camerasToCreate;
 		std::vector<Light*> m_lightsToCreate;
+		std::vector<AudioComponent*> m_audioComponentToCreate;
 
 		std::vector<GameObject*> m_gameObjectsToDelete;
 
 
 		friend struct Camera;
 		friend struct MeshRenderer;
+		friend struct AudioComponent;
 		friend struct Light;
 		friend class GameObject;
 		friend class GameManager;
